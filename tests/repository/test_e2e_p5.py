@@ -27,9 +27,10 @@ def _dim(confidence="ZU_PRUEFEN", trend="ERSTBEWERTUNG"):
 def _result():
     dims = {k: _dim() for k in ("metrics", "economic_buyer", "decision_criteria", "decision_process",
                                 "paper_process", "identify_pain", "champion", "competition")}
-    return AnalysisResult(dimensions=LlmDimensions(**dims), overall_score=25, score_rationale="r",
-                          momentum="NEGATIV", deal_risks=["risk"], next_best_questions=["q?"],
-                          summary_for_manager="s")
+    return AnalysisResult(dimensions=LlmDimensions(**dims), overall_score=25, signal_bonus=0,
+                          score_rationale="r", momentum="NEGATIV",
+                          momentum_rationale="Budget entfallen (Tier-Downgrade)",
+                          deal_risks=["risk"], next_best_questions=["q?"], summary_for_manager="s")
 
 
 @pytest.fixture()
@@ -92,3 +93,26 @@ def test_add_contact_duplicate_guard(capsys):
 def test_analyze_unknown_deal_fails_cleanly(mock_llm):
     assert cli.main(["analyze", str(NOTES), "--deal", "Gibt Es Nicht"]) == 1
     assert mock_llm == []  # kein API-Call verschwendet
+
+
+def test_correct_golden_exports_candidate(mock_llm, tmp_path, monkeypatch, capsys):
+    """--golden exportiert eine vorausgefuellte Golden-Set-Vorlage (Wachstum Richtung n>=20)."""
+    assert cli.main(["add-account", "--name", "Nordwind Logistics"]) == 0
+    assert cli.main(["add-deal", "Nordwind Logistics", "--name", "Ops-Analytics"]) == 0
+    assert cli.main(["analyze", str(NOTES), "--deal", "Ops-Analytics"]) == 0
+
+    assert cli.main(["correct", "Ops-Analytics", "--field", "dimensions.champion.confidence",
+                     "--value", "UNBEKANNT", "--golden"]) == 0
+    out = capsys.readouterr().out
+    assert "Golden-Set-Kandidat exportiert" in out
+
+    candidates_dir = Path(cli.__file__).resolve().parent.parent / "tests" / "golden_set_candidates"
+    files = sorted(candidates_dir.glob("ops-analytics_*.expected.md")) or sorted(
+        candidates_dir.glob("ops_analytics_*.expected.md"))
+    assert files, "Kandidaten-Datei fehlt"
+    content = files[-1].read_text(encoding="utf-8")
+    assert "VON LION ZU PRUEFEN" in content
+    assert "- Confidence: ZU_PRUEFEN" in content       # Ist-Werte vorausgefuellt
+    assert "- Momentum (POSITIV / NEUTRAL / NEGATIV): NEGATIV" in content
+    assert "- Signal-Bonus (0–5): 0" in content
+    files[-1].unlink()  # Testartefakt aufraeumen

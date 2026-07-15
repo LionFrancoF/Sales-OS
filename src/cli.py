@@ -62,8 +62,9 @@ def _render_snapshot(snapshot, label: str) -> str:
         if dim.gaps:
             lines.append(f"   Gaps: {'; '.join(dim.gaps)}")
         lines.append("")
-    lines.append(f"Score: {snapshot.overall_score}/100 — {snapshot.score_rationale}")
-    lines.append(f"Momentum: {snapshot.momentum}")
+    bonus = f" (davon Signal-Bonus: +{snapshot.signal_bonus})" if snapshot.signal_bonus else ""
+    lines.append(f"Score: {snapshot.overall_score}/100{bonus} — {snapshot.score_rationale}")
+    lines.append(f"Momentum: {snapshot.momentum} — {snapshot.momentum_rationale}")
     if snapshot.deal_risks:
         lines.append("Risiken:")
         lines.extend(f"  {i}. {r}" for i, r in enumerate(snapshot.deal_risks, 1))
@@ -273,7 +274,72 @@ def cmd_correct(args: argparse.Namespace) -> int:
     print(f"Korrektur gespeichert: {correction.field_path}: "
           f"'{correction.original_value}' -> '{correction.corrected_value}'")
     print("(Sammlung ab Tag 1; Injektion in Analysen bewusst erst nach M4 — CLAUDE.md)")
+    if args.golden:
+        path = _export_golden_candidate(deal)
+        if path:
+            print(f"Golden-Set-Kandidat exportiert: {path}")
+            print("(Ist-Werte als Vorlage — von Lion zu pruefen/korrigieren, dann nach tests/golden_set/ verschieben)")
     return 0
+
+
+def _export_golden_candidate(deal) -> Path | None:
+    """Exportiert den letzten Snapshot als vorausgefuellte Golden-Set-Vorlage.
+
+    Organisches Wachstum des Golden Sets Richtung n>=20 durch taegliche Nutzung
+    (Befund 2.3). Kandidaten koennen echte Kundendaten enthalten -> Ordner ist
+    gitignored; Lion prueft, korrigiert und verschiebt von Hand.
+    """
+    from src.repository.activities import list_activities
+    from src.repository.snapshots import get_latest_snapshot
+
+    snapshot = get_latest_snapshot(deal.id)
+    if snapshot is None:
+        log.warning("--golden: kein Snapshot fuer '%s' — nichts zu exportieren.", deal.name)
+        return None
+    activities = list_activities(deal.id)
+    sources = ", ".join(a.source or a.id[:8] for a in activities) or "(keine Activities erfasst)"
+
+    lines = [
+        f"# Golden-Set-KANDIDAT — {deal.name} (VON LION ZU PRUEFEN)",
+        "",
+        f"> Ist-Werte des Snapshots vom {snapshot.created_at:%Y-%m-%d %H:%M} als Vorlage —",
+        "> jede Zeile pruefen/korrigieren, dann als <name>.expected.md nach tests/golden_set/.",
+        f"> Input-Notes: {sources}",
+        f"> prompt_version des Ist-Laufs: {snapshot.prompt_version}",
+        "",
+    ]
+    for key, heading in _DIMENSION_ORDER:
+        dim = snapshot.dimensions.get(key)
+        if dim is None:
+            continue
+        lines += [
+            f"## {heading}",
+            f"- Findings: {dim.findings}",
+            f"- Confidence: {dim.confidence}",
+            f"- Evidence: {'; '.join(dim.evidence)}",
+            f"- Gaps: {'; '.join(dim.gaps)}",
+            f"- Trend: {dim.trend}",
+            f"- Recommended action: {dim.recommended_action}",
+            f"- Next question: {dim.next_question}",
+            "",
+        ]
+    lines += [
+        "## Gesamt",
+        f"- Overall score (0–100): {snapshot.overall_score}",
+        f"- Signal-Bonus (0–5): {snapshot.signal_bonus}",
+        f"- Score rationale: {snapshot.score_rationale}",
+        f"- Momentum (POSITIV / NEUTRAL / NEGATIV): {snapshot.momentum}",
+        f"- Momentum rationale: {snapshot.momentum_rationale}",
+        f"- Deal risks: {'; '.join(snapshot.deal_risks)}",
+        f"- Next best questions (max 5, priorisiert): {'; '.join(snapshot.next_best_questions)}",
+        f"- Summary for manager (3 Saetze, forecast-tauglich): {snapshot.summary_for_manager}",
+    ]
+    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    target_dir = Path(__file__).resolve().parent.parent / "tests" / "golden_set_candidates"
+    target_dir.mkdir(parents=True, exist_ok=True)
+    path = target_dir / f"{deal.name.lower().replace(' ', '_')}_{ts}.expected.md"
+    path.write_text("\n".join(lines), encoding="utf-8")
+    return path
 
 
 # ---------------------------------------------------------------- P6-Befehle
@@ -415,6 +481,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--field", required=True, help="z.B. dimensions.champion.confidence")
     p.add_argument("--value", required=True, help="korrigierter Wert")
     p.add_argument("--comment", help="optionaler Kommentar")
+    p.add_argument("--golden", action="store_true",
+                   help="letzten Snapshot als Golden-Set-Kandidat exportieren (organisches Wachstum Richtung n>=20)")
     p.set_defaults(func=cmd_correct)
 
     for name, help_text in _PLACEHOLDER_COMMANDS:

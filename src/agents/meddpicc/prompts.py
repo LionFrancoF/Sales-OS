@@ -53,11 +53,18 @@ nie aus der Wissensbasis.
 - recommended_action und next_question: konkret und SOFORT umsetzbar. Verboten sind \
 Floskeln wie "mehr Discovery machen", "Beziehung vertiefen", "nachhaken". Eine gute \
 next_question ist woertlich im naechsten Call stellbar.
-- overall_score misst Qualifizierungs-GESUNDHEIT (Beleglage ueber alle Dimensionen), \
-NICHT Abschlusswahrscheinlichkeit. Ein prozessual weiter Deal mit unbestaetigtem \
-Champion ist mittelmaessig qualifiziert.
-- momentum ist die TATSAECHLICHE juengste Richtung des Deals (letzte Notes zaehlen \
-staerker), nicht das Potenzial, ihn zu drehen.
+- overall_score und momentum folgen STRIKT der Playbook-Sektion "Momentum & \
+Score-Kalibrierung (Lions Definition — bindend)" in der Wissensbasis. Kurzform: \
+Score = gewichtete Beleglage (Qualifizierungs-Gesundheit, nicht Win-%); \
+signal_bonus (0-5, im overall_score enthalten, separat ausgewiesen) ist der \
+EINZIGE Ort fuer starke Signale ohne vollen Beleg — sie gehoeren NICHT in die \
+Basis-Beleglage und heben NIE ein Confidence-Tier. momentum = Veraenderung der \
+Beleglage, NEUTRAL ist der Default; momentum_rationale MUSS den harten Beleg \
+(Tier-Wechsel, konkrete Buyer-Aktion, Gate) nennen — kannst du keinen nennen, \
+ist momentum NEUTRAL.
+- Anwendungsregel Erstbewertung: gibt es keinen vorigen Snapshot, aber einen \
+chronologischen Notes-Verlauf, wende die Momentum-Definition auf die juengste \
+Entwicklung INNERHALB des Verlaufs an (spaete Notes vs. fruehere Beleglage).
 - deal_risks: priorisiert, konkret, mit dem Warum.
 - next_best_questions: maximal 5, priorisiert nach Informationswert, woertlich stellbar.
 - summary_for_manager: exakt 3 Saetze, forecast-tauglich, ehrlich (kein Happy-Ears).
@@ -75,12 +82,6 @@ ist WAHRSCHEINLICH.
 50% meiner Woche damit") ist ZU_PRUEFEN. Eine vom Treiber benannte, konsistente \
 Zielmetrik ohne Monetarisierung ist WAHRSCHEINLICH. GESICHERT erst, wenn der Kunde \
 die Zahl bestaetigt/selbst gerechnet hat (their math beats your math).
-- momentum ist die ABWAEGUNG der juengsten faktischen Entwicklung, nicht der \
-Extremwert der letzten Note. Stehen sich echte Meilensteine (EB erreicht, \
-Freigaben, Preis-Annaeherung) und echte Rueckschlaege (Champion-Verlust, \
-Budget-Druck, Wettbewerber-Vorsprung) gleichzeitig gegenueber, ist NEUTRAL der \
-Normalfall. POSITIV/NEGATIV nur, wenn praktisch alle juengsten Signale in \
-dieselbe Richtung zeigen.
 - UNBEKANNT vs. ZU_PRUEFEN: ein Signal zaehlt nur fuer die Dimension, die es \
 wirklich informiert. Vage Interessens-Aeusserungen einzelner Personen (z.B. \
 "will Security sehen") machen aus einer nicht artikulierten Dimension (z.B. \

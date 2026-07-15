@@ -412,3 +412,28 @@ Knowledge-Critic (Agent, der Lions Playbooks auf Widersprüche/Lücken gegenlies
   Außerdem P6-Beobachtung behoben: eindeutiger Vorname im Account-Kontext
   (genau 1 Token-Treffer) → 0.85 auto-Zuordnung statt Nachfrage; mehrdeutig
   bleibt Nachfrage-Band. 107 pytest grün.
+- **2026-07-15 — P-KAL (Momentum/Score: Lions Definitionen):** Lions bindende
+  Definition „Momentum = Veränderung der Beleglage, NEUTRAL ist Default;
+  Score = gewichtete Beleglage + Signal-Bonus max +5" wörtlich ins
+  meddpicc_playbook (sein Text, gitignored). Analyzer: momentum_rationale
+  (Begründungspflicht: welcher harte Beleg?) + signal_bonus (Pydantic-Deckel
+  le=5) in Schema/Snapshot/DB (DB-neu-Konvention) + Erstbewertungs-
+  Anwendungsregel (Definitionslücke im Challenge gefunden: Golden Set sind
+  Erstbewertungen); Ad-hoc-Momentum/Score-Regeln aus dem Prompt entfernt
+  (eine Quelle der Wahrheit = Playbook). correct --golden exportiert
+  vorausgefüllte Golden-Set-Kandidaten (tests/golden_set_candidates/,
+  gitignored — kann echte Kundendaten enthalten) → organisches Wachstum
+  Richtung n>=20. VERIFIKATION (1 Pflicht- + 1 Stabilitätslauf, dann Stopp):
+  Scores DEUTLICH besser — Aurelia Δ +15→+11/+12, Meridian Δ −2→0/+2 (exakt),
+  Nordwind −1/−3; Bonus genutzt (Aurelia +3, plausibel); Treffer 20/24 u.
+  21/24 (keine Regression). Momentum bleibt Aurelia POSITIV/Meridian NEGATIV —
+  ABER die momentum_rationales zeigen: das Modell wendet Lions Definition
+  KORREKT an (benennt echte harte Belege). HYPOTHESEN an Lion (keine weitere
+  Iteration, Befund 2.3): (A) Definitionslücke Konfliktfall — harte Belege in
+  BEIDE Richtungen gleichzeitig (Aurelia: EB-Zusage + Champion-Rückzug) sind
+  nicht geregelt; Vorschlag-Kandidat „beide Richtungen hart belegt → NEUTRAL".
+  (B) Referenz prüfen — Meridian-NEGATIV ist nach Lions EIGENER Definition
+  wörtlich begründbar (Julia = „Champion verliert Position"); das
+  NEUTRAL-Label entstand vor der Definition. (C) Rest-Score-Lücke Aurelia
+  (~+11): Gewichtungsanker der 0-3-Tiers nicht definiert. Entscheidung Lion.
+  110 pytest grün.

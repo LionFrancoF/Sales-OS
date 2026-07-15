@@ -88,8 +88,10 @@ CREATE TABLE IF NOT EXISTS snapshots (
     framework_rationale TEXT NOT NULL DEFAULT '',
     dimensions TEXT NOT NULL,            -- JSON: key -> DimensionAssessment
     overall_score INTEGER NOT NULL,
+    signal_bonus INTEGER NOT NULL DEFAULT 0,   -- Lions Kalibrierung: hart gedeckelt +5
     score_rationale TEXT NOT NULL DEFAULT '',
     momentum TEXT NOT NULL,
+    momentum_rationale TEXT NOT NULL DEFAULT '',
     deal_risks TEXT NOT NULL,            -- JSON-Liste
     next_best_questions TEXT NOT NULL,   -- JSON-Liste
     summary_for_manager TEXT NOT NULL DEFAULT '',

@@ -30,7 +30,8 @@ def _result(momentum: str = "NEUTRAL", score: int = 40) -> AnalysisResult:
     )}
     return AnalysisResult(
         dimensions=LlmDimensions(**dims),
-        overall_score=score, score_rationale="r", momentum=momentum,
+        overall_score=score, signal_bonus=0, score_rationale="r",
+        momentum=momentum, momentum_rationale="kein harter Beleg -> NEUTRAL",
         deal_risks=["risiko"], next_best_questions=["frage?"], summary_for_manager="s1. s2. s3.",
     )
 
@@ -137,6 +138,20 @@ def test_circuit_breaker_stops_runaway(monkeypatch):
 def test_empty_notes_rejected():
     with pytest.raises(ValueError, match="Leere Notes"):
         analyze("   ")
+
+
+def test_signal_bonus_hard_cap_in_code():
+    """Lions Kalibrierung: +5-Deckel wird vom CODE erzwungen, nicht nur vom Prompt."""
+    base = _result().model_dump()
+    base["signal_bonus"] = 6
+    with pytest.raises(ValidationError):
+        AnalysisResult.model_validate(base)
+
+
+def test_new_fields_flow_into_snapshot(mock_llm):
+    snapshot = analyze("irgendwelche notes")
+    assert snapshot.signal_bonus == 0
+    assert "NEUTRAL" in snapshot.momentum_rationale
 
 
 def test_llm_schema_rejects_sixth_question():

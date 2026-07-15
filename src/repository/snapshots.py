@@ -26,11 +26,13 @@ def save_snapshot(snapshot: MeddpiccSnapshot) -> MeddpiccSnapshot:
     with db.connect() as conn:
         conn.execute(
             """INSERT INTO snapshots (id, deal_id, created_at, source_activity_ids,
-               framework, framework_rationale, dimensions, overall_score, score_rationale,
-               momentum, deal_risks, next_best_questions, summary_for_manager, prompt_version)
+               framework, framework_rationale, dimensions, overall_score, signal_bonus,
+               score_rationale, momentum, momentum_rationale, deal_risks,
+               next_best_questions, summary_for_manager, prompt_version)
                VALUES (:id, :deal_id, :created_at, :source_activity_ids,
-               :framework, :framework_rationale, :dimensions, :overall_score, :score_rationale,
-               :momentum, :deal_risks, :next_best_questions, :summary_for_manager, :prompt_version)""",
+               :framework, :framework_rationale, :dimensions, :overall_score, :signal_bonus,
+               :score_rationale, :momentum, :momentum_rationale, :deal_risks,
+               :next_best_questions, :summary_for_manager, :prompt_version)""",
             _to_row(snapshot),
         )
     return snapshot

@@ -21,3 +21,6 @@ outputs/
 # ACHTUNG: dadurch kein Git-Backup fuer diese Inhalte — separat sichern!
 knowledge/*.md
 !knowledge/README.md
+
+# Golden-Set-Kandidaten aus taeglicher Nutzung (koennen echte Kundendaten enthalten)
+tests/golden_set_candidates/

@@ -55,9 +55,19 @@ class AnalysisResult(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     dimensions: LlmDimensions
-    overall_score: int = Field(ge=0, le=100, description="Qualifizierungs-Gesundheit 0-100 (nicht Win-%).")
-    score_rationale: str = Field(description="Begruendung des Scores.")
-    momentum: Momentum = Field(description="Tatsaechliche juengste Richtung des Deals (nicht Potenzial).")
+    overall_score: int = Field(
+        ge=0, le=100,
+        description="Qualifizierungs-Gesundheit 0-100 (gewichtete Beleglage, INKLUSIVE Signal-Bonus).",
+    )
+    signal_bonus: int = Field(
+        ge=0, le=5,
+        description="Anteil des overall_score aus starken Signalen ohne vollen Beleg (hart gedeckelt +5, separat ausgewiesen).",
+    )
+    score_rationale: str = Field(description="Begruendung des Scores (Basis-Beleglage + ggf. Signal-Bonus).")
+    momentum: Momentum = Field(description="Veraenderung der BELEGLAGE gemaess Playbook-Kalibrierung — NEUTRAL ist der Default.")
+    momentum_rationale: str = Field(
+        description="Pflicht: WELCHER harte Beleg (Tier-Wechsel/Buyer-Aktion/Gate) begruendet POSITIV/NEGATIV? Ohne harten Beleg: NEUTRAL begruenden.",
+    )
     deal_risks: list[str] = Field(description="Erkannte Deal-Risiken, priorisiert.")
     next_best_questions: list[str] = Field(max_length=5, description="Max 5, priorisiert, woertlich stellbar.")
     summary_for_manager: str = Field(description="3 Saetze, forecast-tauglich.")

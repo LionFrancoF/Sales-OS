@@ -65,9 +65,16 @@ class MeddpiccSnapshot(BaseModel):
         description="Bewertungen je Dimension (Keys: metrics, economic_buyer, decision_criteria, "
         "decision_process, paper_process[nur MEDDPICC], identify_pain, champion, competition).",
     )
-    overall_score: int = Field(ge=0, le=100, description="Gesamt-Score 0-100 (Pflichtfeld).")
+    overall_score: int = Field(ge=0, le=100, description="Gesamt-Score 0-100 inkl. Signal-Bonus (Pflichtfeld).")
+    signal_bonus: int = Field(
+        default=0, ge=0, le=5,
+        description="Anteil aus starken Signalen ohne vollen Beleg (Lions Kalibrierung: hart gedeckelt +5).",
+    )
     score_rationale: str = Field(default="", description="Begruendung des Gesamt-Scores.")
-    momentum: Momentum = Field(default="NEUTRAL", description="Gesamt-Momentum des Deals.")
+    momentum: Momentum = Field(default="NEUTRAL", description="Gesamt-Momentum des Deals (Veraenderung der Beleglage).")
+    momentum_rationale: str = Field(
+        default="", description="Harter Beleg fuer POSITIV/NEGATIV bzw. Begruendung fuer NEUTRAL (Lions Kalibrierung)."
+    )
     deal_risks: list[str] = Field(default_factory=list, description="Erkannte Deal-Risiken.")
     next_best_questions: list[str] = Field(
         default_factory=list, max_length=5, description="Priorisierte, woertlich stellbare Fragen (max 5)."
