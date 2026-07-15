@@ -201,3 +201,14 @@ MCP-Server, HubSpot-Sync, Tauri-App, Embeddings für Knowledge Base.
   Basis, `src/cli.py` als argparse-Gerüst mit Platzhalter-Befehlen. venv +
   Dependencies. `python -m src.cli --help` läuft. Keine Logik/Modelle/Prompts.
   Offen: weitere P-1-Befunde bei ihren Schichten entscheiden.
+- **2026-07-15 — P1 (Domain-Kern):** 6 Pydantic-Aggregate in `src/domain/`
+  (account, contact, deal, activity, meddpicc [DimensionAssessment +
+  MeddpiccSnapshot], correction) + Re-Export in `__init__.py`. IDs uuid4,
+  Field-Beschreibungen deutsch, `extra="forbid"`. Ableitungen: Deal.win_probability
+  aus settings.STAGE_GATES, Activity.raw_text_hash = SHA-256(raw_text). Snapshot
+  validiert erlaubte Dimensions-Keys + paper_process-nur-bei-MEDDPICC. 35 pytest
+  grün (tests/domain/). Entscheidung: **ContactRelationship (relationship.py)
+  bewusst weggelassen** (P-1 Befund 1.3/1.10, schlank) — kommt bei M2. Kleine
+  Feld-Politik-Abweichung vom Prompt: unmarkierte beschreibende Felder (title,
+  domain, industry, size_estimate) sind optional (Domain-Philosophie UNBEKANNT).
+  Offen: weitere P-1-Befunde bei ihren Schichten.

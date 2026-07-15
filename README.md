@@ -53,9 +53,20 @@ und **keine** Feature-Flags in V1 (siehe `ARCHITECTURE_REVIEW.md`, Befund 1.4).
 Playbooks liegen in `knowledge/` als Markdown mit YAML-Frontmatter — Details
 in `knowledge/README.md` (ab P3 aktiv).
 
+## Domain-Modelle (P1)
+Der gemeinsame Vertrag aller Agenten (`src/domain/`, Pydantic v2):
+- **Account** — die Zielfirma; Wurzel des Modells (Name Pflicht, Rest optional).
+- **Contact** — Person bei einem Account inkl. Stakeholder-Alignment (Rolle, Einfluss, Haltung, Beziehungsstärke); Defaults sind „unbekannt".
+- **Deal** — Verkaufschance mit Stage; `win_probability` wird aus der Stage abgeleitet (überschreibbar).
+- **Activity** — append-only Ereignis (Call/E-Mail/Meeting/…); `raw_text_hash` (SHA-256) wird automatisch abgeleitet (Idempotenz-Basis).
+- **DimensionAssessment** / **MeddpiccSnapshot** — das Herzstück: pro Dimension Findings + Confidence + Trend, plus Score, Momentum, Risiken, Next-Best-Questions (append-only, versioniert).
+- **Correction** — manuelle Korrektur (alt → neu) als Grundlage des Feedback-Loops.
+
+_Bewusst noch nicht gebaut: `ContactRelationship` (Beziehungs-Graph) — kommt in M2, wenn es Daten und Nutzen gibt (Review-Befund 1.3/1.10)._
+
 ## Struktur
 ```
-src/domain/         Pydantic-Modelle (P1)
+src/domain/         Pydantic-Modelle (P1) ✓
 knowledge/          Playbooks + Loader (P3)
 src/agents/         Einzweck-Agenten (P4, M1–M4)
 src/repository/     einziger DB-Zugang (P5)

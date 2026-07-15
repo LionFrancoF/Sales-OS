@@ -1,7 +1,8 @@
 # ARCHITECTURE.md — Sales OS
 
 Systemübersicht und Datenfluss. Wird bei jeder Schicht aktualisiert (DoD 5).
-Stand: **P0 (Gerüst)** — noch keine Logik implementiert, nur Struktur.
+Stand: **P1 (Domain-Kern)** — Pydantic-Modelle in `src/domain/` stehen; noch
+keine DB/Agenten/API. Der Datenfluss unten ist Ziel-Architektur.
 
 ## Prinzip
 KEIN autonomes Multi-Agenten-System. Ein **Orchestrator** ruft spezialisierte
@@ -59,7 +60,7 @@ innen nach außen; Cross-Layer-Verstöße sind Bugs.
 ## Schichten (Reihenfolge = Bauabfolge)
 | Schicht | Pfad | Prompt | Status |
 |---|---|---|---|
-| Domain | `src/domain/` | P1 | leer (P0) |
+| Domain | `src/domain/` | P1 | ✓ Modelle stehen |
 | Knowledge | `knowledge/` + `src/knowledge/` | P3 | leer (P0) |
 | Agenten | `src/agents/` | P4, M1–M4 | leer (P0) |
 | Repository | `src/repository/` | P5 | leer (P0) |
