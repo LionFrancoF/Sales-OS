@@ -105,6 +105,14 @@ Was, Entscheidung, Warum). Volle Begründung: ARCHITECTURE_REVIEW.md.
   der Autor der Inhalte definiert das Format, der Loader passt sich an.
   Zusatz: `status: STUB` wird vom Loader übersprungen (kein Skelett-Rauschen
   in Prompts), `FREIGEGEBEN` wird geladen.
+- **[P-1 / 1.6] MEDDICC/MEDDPICC-Auto-Wahl** → ÜBERNOMMEN (gestrichen). V1
+  analysiert immer alle 8 MEDDPICC-Dimensionen; `framework`-Feld bleibt im
+  Modell, `framework_rationale` dokumentiert die Erzwingung. Warum: weniger
+  Verzweigung im schwierigsten Prompt; der MEDDICC-Pfad wäre mangels
+  Golden-Set-Beispielen ungetestet. Auto-Wahl später nachrüstbar.
+- **[P-1 / 1.8] `compare`-CLI-Befehl** → ÜBERNOMMEN (gestrichen). Der Analyzer
+  berechnet `trend` bereits gegen den previous_snapshot; Anzeige kommt in P5
+  (`show-deal`). Warum: redundante Oberfläche für dieselbe Information.
 
 Weitere P-1-Befunde (Capture-first, Eval-n=3, Snapshot-als-Kontextgrenze,
 Event-Log-Tabelle, Trigger-Generizität, Dual-Framework, Re-Analyse-Dedup,
@@ -287,3 +295,21 @@ Knowledge-Critic (Agent, der Lions Playbooks auf Widersprüche/Lücken gegenlies
   44 pytest grün. ENTSCHIEDEN (Lion): Limit auf 64k, Volllast nach
   agents:-Frontmatter; Topic-Profile nur bei Eval-Befund in P4 (siehe
   Bewusste Entscheidungen 3.2+4.5).
+- **2026-07-15 — P4 (MEDDPICC-Analyzer, erster Agent):** `src/agents/meddpicc/`
+  (schema.py = strikter LLM-Vertrag, alle Felder Pflicht; prompts.py mit
+  prompt_version=SHA256-Hash; agent.py mit Structured Outputs via
+  messages.parse(), 1 Retry bei Validierungsfehler, Circuit-Breaker 2.8,
+  Kosten-Logzeile 1.1; evaluation.py = Golden-Set-Parsing + qualitativer
+  Vergleich OHNE Gesamtzahl gemäß 2.3). Modell aus settings.MODEL_ANALYZE
+  (Opus 4.8) — der Masterplan-P4-Prompt nannte fälschlich hartcodiert
+  claude-sonnet-4-6; CLAUDE.md-Regel + Tiering hatten Vorrang. Hinweis:
+  Opus 4.8 akzeptiert kein temperature (API), adaptive thinking aktiv.
+  Prompt-Caching live verifiziert (cache_read=24k Tokens, ~16 ct/Analyse).
+  CLI: analyze + eval implementiert, compare bewusst nicht (1.8).
+  MeddpiccSnapshot um prompt_version-Feld ergänzt (CLAUDE.md-Datenmodell).
+  DoD erfüllt: analyze auf allen 3 Test-Accounts, eval gegen Golden Set
+  gelaufen (17/24 Confidence-Treffer, Scores Δ +13/−6/+1, prompt_version
+  ccaa92ca479d), 58 pytest grün + 1 Echt-API-Test hinter RUN_REAL_API-Flag.
+  Offen: Lions Eval-Iterationsphase (Masterplan Teil 5: eval lesen →
+  prompts.py/Playbook schärfen → wieder eval); Momentum-Kalibrierung
+  auffällig (Modell urteilt extremer als Lions NEUTRAL-Referenzen).

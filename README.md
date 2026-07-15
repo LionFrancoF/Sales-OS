@@ -25,17 +25,22 @@ cp .env.example .env            # ANTHROPIC_API_KEY= eintragen
 
 ## Nutzung
 ```bash
-python -m src.cli --help        # Befehlsübersicht (P0: Platzhalter)
+python -m src.cli --help        # Befehlsübersicht
+
+# Notes analysieren (erster Agent, P4): Ampel je Dimension + JSON nach outputs/
+python -m src.cli analyze tests/sample_notes/nordwind_01.txt --deal "Nordwind"
+
+# Golden-Set-Eval: Ist vs. Soll qualitativ je Deal (bewusst ohne Gesamtmetrik, n=3)
+python -m src.cli eval
 ```
 
-Alle Befehle sind aktuell Platzhalter und werden in ihrer Schicht/Modul
-implementiert:
+Implementiert: `analyze`, `eval`. Übrige Befehle sind Platzhalter für ihre Schicht:
 
 | Befehl | Zweck | Schicht |
 |---|---|---|
-| `analyze` | Notes → MEDDPICC-Analyse | P4 |
+| `analyze` ✓ | Notes → MEDDPICC-Analyse (Opus 4.8, Structured Outputs, Prompt-Caching) | P4 |
+| `eval` ✓ | Golden-Set: Ist vs. Soll qualitativ | P4 |
 | `ingest` | Text aufnehmen, klassifizieren, routen | P6 |
-| `eval` | Golden-Set-Auswertung | P4 |
 | `correct` | Korrektur speichern (Feedback-Loop) | P5 |
 | `add-account` / `add-deal` / `add-contact` | Stammdaten anlegen | P5 |
 | `list-deals` / `show-deal` | Deals ansehen | P5 |
@@ -43,6 +48,9 @@ implementiert:
 | `account-map` | Stakeholder-Map | M2 |
 | `briefing` | Pipeline-Briefing | M3 |
 | `prep` | Meeting-Prep One-Pager | M4 |
+
+_Bewusst kein `compare`-Befehl: der Analyzer berechnet `trend` bereits gegen den
+vorigen Snapshot (Review-Befund 1.8)._
 
 ## Konfiguration
 Zentral in `src/config/settings.py` (typisierte Konstanten: Modelle,

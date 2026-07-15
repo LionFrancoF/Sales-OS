@@ -35,6 +35,15 @@ KNOWLEDGE_CHAR_LIMIT: Final[int] = 64_000
 MAX_LLM_CALLS_PER_COMMAND: Final[int] = 25        # harter Anschlag gegen Runaway-Schleifen
 MAX_LLM_TOKENS_PER_COMMAND: Final[int] = 500_000  # harte Token-Obergrenze pro CLI-Aufruf
 
+# --- Preise in USD je Million Tokens (Stand Juli 2026) ---
+# Nur fuer die grobe Kosten-Logzeile pro Call (CLAUDE.md: eine Log-Zeile,
+# keine Cost-Tabelle). cache_write = 1.25x Input, cache_read = 0.1x Input.
+MODEL_PRICES_USD_PER_MTOK: Final[dict[str, dict[str, float]]] = {
+    "claude-opus-4-8": {"input": 5.0, "output": 25.0, "cache_read": 0.5, "cache_write": 6.25},
+    "claude-sonnet-5": {"input": 3.0, "output": 15.0, "cache_read": 0.3, "cache_write": 3.75},
+    "claude-haiku-4-5-20251001": {"input": 1.0, "output": 5.0, "cache_read": 0.1, "cache_write": 1.25},
+}
+
 # --- STAGE_GATES: Austrittskriterien + Default-Win-% pro Deal-Stage ---
 # Referenz für Analyzer & Pipeline-Briefing. Als Python-dict statt config.yaml
 # (P-1 Befund 4.3). Keys entsprechen Deal.stage (Domain kommt in P1).

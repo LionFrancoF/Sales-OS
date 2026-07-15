@@ -73,6 +73,9 @@ class MeddpiccSnapshot(BaseModel):
         default_factory=list, max_length=5, description="Priorisierte, woertlich stellbare Fragen (max 5)."
     )
     summary_for_manager: str = Field(default="", description="3 Saetze, forecast-tauglich.")
+    prompt_version: str = Field(
+        default="", description="Hash/Nummer des erzeugenden Prompts (Rueckverfolgung, CLAUDE.md-Datenmodell)."
+    )
 
     @model_validator(mode="after")
     def _check_dimensions(self) -> "MeddpiccSnapshot":
