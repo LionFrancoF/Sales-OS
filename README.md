@@ -91,9 +91,9 @@ _Bewusst noch nicht gebaut (P1 schlank, Review-Befund 1.10): `Correction` kommt 
 ## Struktur
 ```
 src/domain/         Pydantic-Modelle (P1) ✓
-knowledge/          Playbooks + Loader (P3)
-src/agents/         Einzweck-Agenten (P4, M1–M4)
-src/repository/     einziger DB-Zugang (P5)
+knowledge/          Playbooks + Loader (P3) ✓
+src/agents/         Einzweck-Agenten (P4 ✓, M1–M4)
+src/repository/     einziger DB-Zugang (P5) ✓
 src/orchestrator/   Ingestion/Routing (P6)
 src/api/            FastAPI (P7)
 src/cli.py          Einstiegspunkt
