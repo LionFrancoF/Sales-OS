@@ -377,3 +377,18 @@ Knowledge-Critic (Agent, der Lions Playbooks auf Widersprüche/Lücken gegenlies
   Dedup-Wiederholung bricht sauber ab. 91 pytest grün. Offen: Lions
   Eval-Iterationsphase (P4); Vorname-only-Erwähnungen landen im Nachfrage-Band
   (konservativ übersprungen bei non-interactive — beobachten).
+- **2026-07-15 — P7 (API-Schicht):** `src/api/app.py` — FastAPI als dünne Haut
+  über exakt den CLI-Funktionen (process_note, analyze, record_correction,
+  Repository): POST /ingest, POST /deals/{id}/analyze, GET /deals,
+  GET /deals/{id} (DealDetail: Deal+Account+Kontakte+Snapshot+Korrekturen),
+  POST /corrections, GET /export/csv?entity=deals|contacts|activities.
+  Fehlerbild: 404 unbekannte Entities, 409 Dedup, 422 mit strukturierter
+  Kandidatenliste (API fragt nicht interaktiv nach). Dafür erste eigene
+  Exception ResolutionUnclear — konform zu Befund 1.7 (existiert, weil CLI
+  und API sie unterschiedlich fangen). record_correction/resolve_field_path
+  ins Repository extrahiert (CLI+API teilen sie). Domain-Modelle direkt als
+  Response-Modelle. DoD: alle Endpoints via TestClient getestet, kompletter
+  Ingest über die API nachgestellt (200→409→422-Pfad), uvicorn-Boot live
+  verifiziert (echte P6-Daten via GET /deals, /docs 200). 104 pytest grün.
+  Damit sind Schichten 0–7 komplett; als Nächstes M1–M4. Offen: Lions
+  Eval-Iterationsphase (P4).

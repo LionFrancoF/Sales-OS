@@ -6,9 +6,9 @@ Account-Map, Pipeline-Briefing, Meeting-Prep) arbeiten über ein gemeinsames
 Datenmodell und einen Ingestion-Orchestrator zusammen — API-first, lokal,
 später kompatibel mit Fremdsoftware (eigene App, MCP, HubSpot, CSV).
 
-> **Status: P6 (Orchestrator) fertig.** Kern-Datenfluss lebt: `ingest` →
-> Klassifizierung (Haiku) → Deal-Resolution → append-only Persistenz →
-> MEDDPICC-Analyse (Opus) mit Trend. Als Nächstes: P7 (API), dann M1–M4.
+> **Status: Schichten 0–7 komplett.** Kern-Datenfluss lebt (ingest →
+> Klassifizierung → Resolution → append-only Persistenz → Analyse mit Trend)
+> und ist per CLI UND FastAPI nutzbar. Als Nächstes: Module M1–M4.
 
 ## Setup
 ```bash
@@ -64,6 +64,28 @@ Implementiert: P4 (`analyze`, `eval`), P5 (Persistenz-Befehle), P6 (`ingest`, `s
 _Bewusst kein `compare`-Befehl: der Analyzer berechnet `trend` bereits gegen den
 vorigen Snapshot (Review-Befund 1.8)._
 
+## API (P7)
+Dünne FastAPI-Haut über exakt den CLI-Funktionen — lokal, ohne Auth (V1), Docs unter `/docs`:
+```bash
+uvicorn src.api.app:app --reload
+```
+```bash
+# Ingest (409 bei Duplikat; 422 mit Kandidatenliste, wenn Zuordnung < 0.8 — dann deal_name setzen)
+curl -X POST localhost:8000/ingest -H 'content-type: application/json' \
+  -d '{"text": "Call mit Nordwind wegen Ops-Analytics Rollout ...", "source": "curl"}'
+
+# Deals + Detail (inkl. letzter Snapshot, Kontakte, Korrekturen)
+curl localhost:8000/deals
+curl localhost:8000/deals/<deal_id>
+
+# Korrektur speichern (original_value wird aus dem letzten Snapshot aufgelöst)
+curl -X POST localhost:8000/corrections -H 'content-type: application/json' \
+  -d '{"deal_id": "<deal_id>", "field_path": "dimensions.champion.confidence", "corrected_value": "ZU_PRUEFEN"}'
+
+# CSV-Export (Kompatibilität mit Fremdsoftware)
+curl -o deals.csv 'localhost:8000/export/csv?entity=deals'
+```
+
 ## Persistenz (P5)
 SQLite (`sales_os.db`, gitignored) hinter einer Repository-Schicht — dem einzigen
 Datenbankzugang. Snapshots/Activities/ContactHistory sind **append-only**; die DB ist
@@ -100,7 +122,7 @@ knowledge/          Playbooks + Loader (P3) ✓
 src/agents/         Einzweck-Agenten (P4 ✓, M1–M4)
 src/repository/     einziger DB-Zugang (P5) ✓
 src/orchestrator/   Ingestion/Routing (P6) ✓
-src/api/            FastAPI (P7)
+src/api/            FastAPI (P7) ✓
 src/cli.py          Einstiegspunkt
 src/config/         settings.py (Konstanten)
 tests/              sample_notes/, golden_set/, regression/

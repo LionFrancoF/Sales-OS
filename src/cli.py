@@ -95,17 +95,6 @@ def _save_snapshot_json(snapshot, stem: str, subdir: str = "") -> Path:
     return path
 
 
-def _resolve_field_path(data: dict, field_path: str):
-    """Loest 'dimensions.champion.confidence' im Snapshot-Dict auf (None wenn unaufloesbar)."""
-    node = data
-    for part in field_path.split("."):
-        if isinstance(node, dict) and part in node:
-            node = node[part]
-        else:
-            return None
-    return node
-
-
 # ---------------------------------------------------------------- P4-Befehle
 
 def cmd_analyze(args: argparse.Namespace) -> int:
@@ -272,27 +261,15 @@ def cmd_show_deal(args: argparse.Namespace) -> int:
 def cmd_correct(args: argparse.Namespace) -> int:
     """correct <deal> --field <pfad> --value <neu> [--comment] — Feedback sammeln."""
     from src.agents.meddpicc.agent import AGENT_NAME
-    from src.domain.correction import Correction
-    from src.repository.corrections import save_correction
+    from src.repository.corrections import record_correction
     from src.repository.deals import get_deal_by_name
-    from src.repository.snapshots import get_latest_snapshot
 
     try:
         deal = get_deal_by_name(args.deal)
     except LookupError as e:
         log.error("%s", e)
         return 1
-    snapshot = get_latest_snapshot(deal.id)
-    original = None
-    if snapshot is not None:
-        original = _resolve_field_path(snapshot.model_dump(mode="json"), args.field)
-        if original is None:
-            log.warning("Feld-Pfad '%s' im letzten Snapshot nicht aufloesbar — original_value bleibt leer.", args.field)
-    correction = save_correction(Correction(
-        deal_id=deal.id, agent=AGENT_NAME, field_path=args.field,
-        original_value="" if original is None else str(original),
-        corrected_value=args.value, comment=args.comment or "",
-    ))
+    correction = record_correction(deal.id, AGENT_NAME, args.field, args.value, args.comment or "")
     print(f"Korrektur gespeichert: {correction.field_path}: "
           f"'{correction.original_value}' -> '{correction.corrected_value}'")
     print("(Sammlung ab Tag 1; Injektion in Analysen bewusst erst nach M4 — CLAUDE.md)")

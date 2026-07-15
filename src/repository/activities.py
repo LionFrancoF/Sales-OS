@@ -38,6 +38,13 @@ def get_activity_by_hash(raw_text_hash: str) -> Activity:
     return Activity(**dict(row))
 
 
+def list_all_activities() -> list[Activity]:
+    """Alle Activities (CSV-Export, P7)."""
+    with db.connect() as conn:
+        rows = conn.execute("SELECT * FROM activities ORDER BY occurred_at").fetchall()
+    return [Activity(**dict(r)) for r in rows]
+
+
 def list_activities(deal_id: str) -> list[Activity]:
     with db.connect() as conn:
         rows = conn.execute(

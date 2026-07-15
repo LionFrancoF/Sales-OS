@@ -1,10 +1,9 @@
 # ARCHITECTURE.md — Sales OS
 
 Systemübersicht und Datenfluss. Wird bei jeder Schicht aktualisiert (DoD 5).
-Stand: **P6 (Orchestrator)** — der Kern-Datenfluss lebt: `ingest` klassifiziert
-(Haiku), löst den Deal auf (Schwelle 0.8, nachfragen statt raten), persistiert
-die Activity ZUERST (Beleg-Kette + Wiederaufsetzpunkt) und routet an den
-Analyzer/Kontakt-Updates. Noch keine API (P7).
+Stand: **Schichten 0–7 komplett.** Der Kern-Datenfluss (ingest → Klassifizierung
+→ Resolution → Activity zuerst → Analyzer/Kontakte) ist per CLI und FastAPI
+(P7, dünne Haut, /docs) nutzbar. Als Nächstes: Module M1–M4.
 
 ## Prinzip
 KEIN autonomes Multi-Agenten-System. Ein **Orchestrator** ruft spezialisierte
@@ -12,7 +11,7 @@ KEIN autonomes Multi-Agenten-System. Ein **Orchestrator** ruft spezialisierte
 (Repository)** kooperieren. Deterministisch, testbar, günstig. Schichten von
 innen nach außen; Cross-Layer-Verstöße sind Bugs.
 
-## Datenfluss (P6: bis auf API real)
+## Datenfluss (real ab Schicht 7)
 
 ```
                  ┌──────────────┐        ┌──────────────┐
@@ -67,7 +66,7 @@ innen nach außen; Cross-Layer-Verstöße sind Bugs.
 | Agenten | `src/agents/` | P4, M1–M4 | ✓ MEDDPICC-Analyzer (Opus 4.8, Structured Outputs, Caching, Circuit-Breaker) |
 | Repository | `src/repository/` | P5 | ✓ SQLite, append-only Snapshots/Activities/History, Entity-Resolution |
 | Orchestrator | `src/orchestrator/` | P6 | ✓ classifier/resolver/ingest (process_note, Wiederaufsetzpunkt) |
-| API | `src/api/` | P7 | leer (P0) |
+| API | `src/api/` | P7 | ✓ FastAPI: ingest/deals/analyze/corrections/export-csv (409/422-Fehlerbild) |
 | CLI | `src/cli.py` | P0–P6 | ✓ analyze/eval/ingest/set-stage + Stammdaten (Platzhalter nur M1–M4) |
 
 ## Bewusste Abweichungen vom ursprünglichen Plan (P-1)

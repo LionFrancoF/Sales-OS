@@ -44,6 +44,13 @@ def get_contact(contact_id: str) -> Contact:
     return _from_row(row)
 
 
+def list_all_contacts() -> list[Contact]:
+    """Alle Kontakte (CSV-Export, P7)."""
+    with db.connect() as conn:
+        rows = conn.execute("SELECT * FROM contacts ORDER BY account_id, name").fetchall()
+    return [_from_row(r) for r in rows]
+
+
 def list_contacts(account_id: str) -> list[Contact]:
     with db.connect() as conn:
         rows = conn.execute(
