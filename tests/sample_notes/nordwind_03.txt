@@ -1,0 +1,15 @@
+Nordwind Demo - 14.05.2026
+publikum: Markus, Tobias, 2 leute aus den standorten (Namen? einer war "Kai" glaub ich), Sabine NICHT da (krank gemeldet)
+
+- demo lief ok, Tobias war begeistert, direkt fragen zu API + datenexport
+- die standort-leute eher passiv, einer (Kai) meinte "sieht gut aus aber wer pflegt das dann"
+- Markus pusht, sagt er will "das ins management bringen"
+- ABER: immer noch niemand vom entscheider-level dabei, das nervt mich langsam
+- Frau Dr. Kessler wurde erwaehnt - "die muss das eh absegnen" - keine ahnung wer das ist, CFO? COO? UNBEDINGT nachfragen
+- decision process bleibt neblig, keiner sagt klar wie freigabe laeuft
+- timing: Markus sagt "vor sommer waer geil" aber klingt nicht committed, eher wunsch
+- Sabine fehlt -> security/architektur fragen alle offen
+- kein echtes budget bestaetigt, die 150k von letztem mal waren wohl eher spontan dahingesagt
+- randnotiz: muss noch CRM sauber machen, ist ne katastrophe grad
+
+next: follow up mit Sabine (security), und RAUSFINDEN wer Kessler wirklich ist

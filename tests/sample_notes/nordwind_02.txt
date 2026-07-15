@@ -1,0 +1,15 @@
+Nordwind - 24.04.2026 - Discovery IT
+dabei: Sabine Vogt (IT-Leitung), Markus (kurz, musste frueher raus), Tobias (Analyst, junger typ)
+
+- kaffeemaschine im call room kaputt, 10 min spaeter angefangen
+- Sabine eher technisch, will wissen: on-prem oder cloud? security? wo liegen die daten
+- aktuell: SAP + 5 excel-monster + ein altes BI tool das keiner mag
+- Tobias macht die ganzen reports manuell, sagt er verbringt "50-60% der woche" damit -> das ist ne metric, gut aufschreiben
+- pain klar: manuelle reports, fehleranfaellig, zu langsam, monatsabschluss dauert 8 tage
+- Markus meinte kurz vorm gehen: "wenn das laeuft reden wir ueber richtig budget, so 150k waer drin fuers erste"  <-- budget signal!!
+- Sabine skeptisch ob "noch ein tool"
+- kein wort ueber wer final entscheidet. CFO? Markus wich aus
+- WM quali thema kurz, Sabine ist auch fan, 5 min smalltalk
+- next: ich mach ne kurze demo fuers ops team
+
+[intern: Sabine koennte blocker werden wenn ich sie nicht mitnehme. budget 150k noch nicht hart]

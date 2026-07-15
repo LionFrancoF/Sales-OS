@@ -1,0 +1,15 @@
+Aurelia - 28.05.2026 - Statusupdate (bisschen holprig)
+mit Frau Neumann (Einkauf) hauptsaechlich, Katharina nur die letzten 5 min
+
+- WICHTIG: Katharina wurde teilweise in ein anderes programm (payments migration) abgezogen!
+   sie ist nur noch "mit einem bein" im Vela projekt, sagt sie selbst
+   -> unser haupttreiber verliert zeit + einfluss. das ist ein ernstes risiko (widerspruch zur rolle in call 1/2)
+- jetzt soll eher Ostermann direkt + eine neue person operativ uebernehmen: "Team Lead Data Ops" Miriam Voss
+- Miriam kenn ich noch gar nicht -> muss dringend beziehung aufbauen
+- Einkauf/Neumann: die 400k stehen NICHT mehr fix - "wir haben die anderen angebote, Sie liegen 20% drueber, da muessen wir reden"
+   -> budget doch umkaempft, evtl runter auf ~320k? (widerspruch zu call 1, wo Katharina sagte budget sei durch)
+- Legal (Wolff) hakt bei haftung/SLA klauseln, schon 2 redline runden
+- Andreas (security) ist komplett durch, positiv, kein thema mehr
+- stimmung immer noch gut, aber deutlich mehr koeche jetzt
+
+[intern: champion-risiko ernst nehmen, Katharina driftet raus. Miriam wird key person. budget NICHT mehr als sicher verbuchen]

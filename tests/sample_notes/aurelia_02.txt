@@ -1,0 +1,18 @@
+Aurelia - 11.02.2026 - Tech Deep Dive + Security
+teilnehmer: Katharina, Andreas Kliment (InfoSec), ein data engineer ("Sven"?)
+
+- Andreas = harter hund, security. bohrt nach: data residency (muss EU/DE bleiben!), SOC2, pen test reports, verschluesselung at rest
+- data residency ist HARD requirement -> wenn wir das nicht sauber haben = raus, ganz klar gesagt
+- Sven technisch zufrieden, sagt integration in ihr snowflake setup machbar
+- Katharina moderiert stark, klar die treiberin, "ich will das bis Q3 produktiv haben"
+- decision criteria werden konkret:
+   1) data residency EU/DE
+   2) BaFin-konforme audit logs
+   3) SSO / AD integration
+   4) SLA 99,9
+- Ostermann (CIO/EB) nicht dabei, aber Katharina: "ich update ihn woechentlich, er ist committed"
+- procurement: Frau Neumann wird das RFP-maessig aufsetzen, kommt spaeter
+- smalltalk: Andreas macht triathlon, halbe stunde ueber marathon zeiten am ende lol
+- next: security fragebogen ausfuellen (100+ fragen...), dann angebot
+
+[intern: Andreas ist der gatekeeper security. wenn data residency passt, ist er vom blocker zum befuerworter]

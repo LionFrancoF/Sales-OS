@@ -1,0 +1,14 @@
+Aurelia Bank AG - 16.01.2026 - Intro / Requalifizierung
+mit Dr. Katharina Bender (VP Data & Analytics)
+
+- kam ueber empfehlung (ex-kollege von ihr nutzt uns schon)
+- Aurelia = privatbank, ~8000 MA, stark reguliert (BaFin wird oft kommen)
+- Katharina SEHR sharp, weiss genau was sie will, hat schon business case im kopf
+- pain: regulatorisches reporting bindet massiv leute, cycle aktuell 5 tage, fehleranfaellig -> ziel: runter auf 1 tag
+- sie sagt "wir haben budget, das ist kein blocker, ~400k fuer die plattform sind im daten-programm genehmigt"
+- EB: ihr chef Ralf Ostermann (CIO), sie sagt sie hat sein ohr / woechentl. update
+- sie will Vela als teil eines groesseren "data modernization" programms
+- warnt schon vor: "einkauf und legal werden das prozedere machen, das dauert bei uns lang"
+- next: technischer deep dive + sie stellt security team vor
+
+[intern: bester lead seit langem. echter treiber, budget da, klarer pain + harte metric. dranbleiben!]

@@ -1,0 +1,13 @@
+Aurelia - 07.07.2026 - Vertrag / Verhandlung
+mit Miriam Voss (neu, Data Ops Lead) + Frau Neumann, Ostermann kurz am ende dazu
+
+- Miriam ist gut! pragmatisch, will das ding endlich live sehen, wird neuer haupt-ansprechpartner. baut sich intern als treiberin auf
+- Katharina fast raus (payments projekt frisst sie), nur noch sponsor im hintergrund
+- procurement fast durch, Neumann: "wenn der preis passt, signieren wir in ca 3 wochen"
+- preis: einigung zeichnet sich bei 355k ab (zwischen 320 und 400), fast final
+- legal: DPA final unterschriftsreif, nur noch EINE SLA klausel offen (Wolff haengt sich rein)
+- Ostermann am ende: "ich unterschreibe, sobald einkauf und legal gruen sind" -> muendliches commitment! sehr nah dran
+- risiko: BaFin sonderpruefung im herbst koennte ressourcen der bank binden, timing beobachten
+- next: finale preisrunde + legal closeout, dann signatur
+
+[intern: das ist spaet-stage, richtung verbal/negotiation. paper process ist der einzige gating faktor, produkt + security laengst durch]

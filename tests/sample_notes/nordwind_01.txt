@@ -1,0 +1,17 @@
+Call Nordwind Logistics - 08.04.2026 - Erstgespraech
+Teilnehmer: Markus Reinhardt (Head of Ops), ich
+
+- kam ueber LinkedIn rein, Markus hat auf meinen post reagiert
+- Nordwind = Kontraktlogistik, ca 3000 MA, standorte DE/AT/PL
+- Markus nett, redet viel, faehrt jetzt nen Tesla (hat er 2x erwaehnt lol)
+- problem grob: reporting dauert ewig, alles excel, "wir fliegen blind"
+- keine echte transparenz ueber die standorte hinweg, jeder macht sein ding
+- er will "irgendwas mit dashboards und automation"
+- usecase noch total vage, muss ich schaerfen
+- budget? kA, hab nicht gefragt, zu frueh
+- wer entscheidet? unklar, Markus sagt "das laeuft ueber mich und die IT"
+- IT = Sabine Vogt, soll ich naechstes mal dazu holen
+- naechster schritt: discovery call mit Sabine, Markus terminiert
+- [intern: sehr frueh, nicht ueberbewerten, aber Markus ist heiss]
+
+TODO: usecase one pager schicken, an Markus

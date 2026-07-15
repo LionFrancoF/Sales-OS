@@ -233,3 +233,11 @@ MCP-Server, HubSpot-Sync, Tauri-App, Embeddings für Knowledge Base.
   Correction (Masterplan-Prompt Punkt 7 hatte de facto Vorrang, ohne Nachfrage).
   1.10 jetzt als Bewusste Entscheidung formalisiert; zwei Präventionsregeln unter
   "Arbeitsweise" ergänzt. 30 pytest grün.
+- **2026-07-15 — P2 (Testdaten-Fabrik):** 14 messy Call-Notes in
+  `tests/sample_notes/` für 3 fiktive Accounts (nordwind_01-04 = frühe Discovery
+  m. Lücken + Budget-Widerspruch; aurelia_01-05 = Spät-Stage m. Paper Process +
+  Champion-Wechsel + Budget-Squeeze; meridian_01-05 = mid-stage m. stillem Champion
+  + aktivem Wettbewerber Fluxion). Rollen nur ableitbar, nie gelabelt. 3 leere
+  Golden-Set-Vorlagen (`tests/golden_set/*.expected.md`, Framework MEDDPICC erzwungen)
+  — vom Nutzer von Hand auszufüllen. `sample_notes/README.md` mit Verlaufs-Übersicht.
+  Keine Analyse/Bewertung durch Claude. Offen (Nutzer): 3 Vorlagen ausfüllen (Gate P2).

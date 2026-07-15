@@ -1,0 +1,14 @@
+Meridian - 02.04.2026 - Workshop IT + Produkt
+dabei: Julia, Peter Grothe (IT-chef), Nina (product owner, sehr engagiert), 1 field-service typ
+
+- Nina liebt es, sofort usecases gesprudelt, sie waer daily user
+- Grothe reserviert, viele "ja aber": integration, wartung, "wer supportet das in 3 jahren"
+- Grothe am rande: "wir schauen uns eh grad mehrere an, u.a. Fluxion" - erstes mal dass Fluxion faellt, klang aber nebensaechlich
+- Julia im workshop wieder eher ruhig, unterstuetzt aber wenn ich sie direkt anspreche
+   -> nachher am telefon sagt sie mir "ich bin voll an bord, will Q3 live gehen"
+- metrics-ansatz: field service einsaetze, MTBF der geraete, downtime -> koennte man quantifizieren, noch vage
+- decision: Grothe sagt "IT gibt technische empfehlung, entscheiden tut die geschaeftsfuehrung / Feldmann"
+- MDR/regulatory: alles muss dokumentiert + validiert sein, compliance (Frau Berger?) muss spaeter draufschauen
+- next: POC scope besprechen, Julia will das treiben
+
+[intern: Grothe ist der knackpunkt + Fluxion im hintergrund. Julia zu leise fuer nen echten champion? beobachten]
