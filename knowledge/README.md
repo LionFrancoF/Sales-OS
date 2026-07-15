@@ -1,31 +1,46 @@
 # knowledge/ — Playbooks (kuratiertes Wissen)
 
-Hier liegt das kuratierte Sales-Wissen als Markdown-Playbooks. Agenten ziehen
-sich **relevante Abschnitte** in ihren System-Prompt (Knowledge-Injection) —
-so entsteht die Ratgeber-Qualität nicht durch Training, sondern durch dein
-Playbook. Die Dateien selbst kommen in **Schicht 3 (P3)**, der Loader
-(`src/knowledge/loader.py`) ebenfalls.
+Hier liegt Lions Sales-Wissen als Markdown-Playbooks. Agenten ziehen sich
+**relevante Abschnitte** über `src/knowledge/loader.py` in ihren System-Prompt
+(Knowledge-Injection) — die Ratgeber-Qualität entsteht durch dieses kuratierte
+Wissen, nicht durch Training.
 
-## Format (ab P3)
-Jede `.md`-Datei beginnt mit YAML-Frontmatter und ist intern in markierte
-Abschnitte mit eigenen Topic-Tags gegliedert:
+## ⚠️ Privat — nicht im Repo
+Die Playbook-Inhalte sind persönliches Sales-IP und **gitignored** (nur diese
+README ist committed; das Repo ist public). Konsequenz: **kein Git-Backup** für
+diese Dateien — den Ordner separat sichern (Time Machine, Drive o.ä.).
+
+## Format
+Jede Datei: YAML-Frontmatter + Abschnitte mit `<!-- topic: x -->`-Markern:
 
 ```markdown
 ---
-topics: [meddpicc, champion, discovery]
-agents: [meddpicc, meeting_prep]
+topics: [champion, metrics]
+agents: [meddpicc_analyzer, meeting_prep]
+status: FREIGEGEBEN (Lion, 07/2026)
 ---
 
-<!-- section: champion topics: [champion, stakeholder] -->
-## Champion vs. Coach
-...
+# Mein Playbook
+
+## Champion
+<!-- topic: champion -->
+- Regel ...
 ```
 
-Der Loader kann so auf **Abschnitts-Ebene** selektieren (z. B. Account-Map lädt
-nur `champion` + `stakeholder`). Physisches Splitten in Einzeldateien erst,
-wenn eine Datei unhandlich wird.
+- `agents`: welche Agenten die Datei komplett laden (`load_for("meddpicc_analyzer")`).
+- `topics`: wofür die Datei relevant ist; mit `load_for(agent, topics=[...])`
+  werden nur die passenden `<!-- topic: x -->`-Abschnitte geladen (z.B. lädt
+  Account-Map nur `champion` + `stakeholder`).
+- `status`: `FREIGEGEBEN` = wird geladen · `STUB` = wird übersprungen, bis gefüllt.
+- Datei ohne Marker = ein Abschnitt. Physisches Splitten erst, wenn eine Datei
+  unhandlich wird.
+
+## Limit-Verhalten
+Überschreitet die Auswahl `KNOWLEDGE_CHAR_LIMIT` (settings.py, 24.000), schlägt
+der Loader **laut fehl** (ValueError mit Aufstellung) — es wird nie still
+gekürzt. Dann: Topics schärfen oder Limit bewusst erhöhen.
 
 ## Eigenes Wissen hinzufügen (Kurzfassung)
-1. Neue `.md` in `knowledge/` anlegen, Frontmatter (`topics`, `agents`) setzen.
-2. Inhalt in Abschnitte mit `<!-- section: ... -->`-Markern gliedern.
-3. Fertig — der Loader wählt passende Abschnitte automatisch je Agent/Topic.
+1. Neue `.md` hier ablegen, Frontmatter (`topics`, `agents`, `status: FREIGEGEBEN`) setzen.
+2. Inhalt in Abschnitte mit `<!-- topic: x -->` gliedern.
+3. Fertig — der Loader findet sie automatisch, nichts zu registrieren.

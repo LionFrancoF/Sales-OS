@@ -87,6 +87,20 @@ Was, Entscheidung, Warum). Volle Begründung: ARCHITECTURE_REVIEW.md.
   `ContactRelationship` erst in M2 (Account-Map). Warum: keine Modelle für Features
   4-8 Schichten voraus — das ist der Anti-YAGNI, den die Eisernen Regeln verbieten.
   (Nachträglich korrigiert: correction.py war in P1 versehentlich mitgebaut worden.)
+- **[P-1 / 3.2 + 4.5] Knowledge-Limit-Verhalten** → ÜBERNOMMEN (modifiziert).
+  KNOWLEDGE_CHAR_LIMIT 8000→24000 (Lions Playbook allein ~11k; Prompt-Caching
+  macht große stabile Blöcke billig); bei Überschreitung LAUTER ValueError mit
+  Aufstellung — NIE still trunkieren. Warum: stiller Qualitätsverlust wäre eine
+  unsichtbare Regression; das Limit ist Runaway-Backstop, kein Sparinstrument.
+- **[P3 / IP-Schutz] knowledge/-Inhalte nicht ins public Repo** → `knowledge/*.md`
+  gitignored (nur README committed). Warum: Playbooks sind Lions persönliches
+  Sales-IP; Code public (Portfolio), Wissen lokal. Konsequenz: separates Backup
+  für knowledge/ nötig (kein Git-Backup mehr).
+- **[P3 / Format] Abschnitts-Marker `<!-- topic: x -->`** (Lions Datei-Format)
+  statt der ursprünglich spezifizierten `<!-- section: ... -->`-Syntax. Warum:
+  der Autor der Inhalte definiert das Format, der Loader passt sich an.
+  Zusatz: `status: STUB` wird vom Loader übersprungen (kein Skelett-Rauschen
+  in Prompts), `FREIGEGEBEN` wird geladen.
 
 Weitere P-1-Befunde (Capture-first, Eval-n=3, Snapshot-als-Kontextgrenze,
 Event-Log-Tabelle, Trigger-Generizität, Dual-Framework, Re-Analyse-Dedup,
@@ -201,7 +215,8 @@ Schicht 0–7 (Setup, Domain, Testdaten, Knowledge Base, Analyzer, Persistenz,
 Orchestrator, API), dann Module M1–M4 (Research, Account-Map, Pipeline-
 Briefing, Meeting-Prep). Backlog: Outreach, Follow-up-Engine, Objection-
 Handling, POC-Scoping, MAP-Generator, Won/Lost, Signal-Monitoring,
-MCP-Server, HubSpot-Sync, Tauri-App, Embeddings für Knowledge Base.
+MCP-Server, HubSpot-Sync, Tauri-App, Embeddings für Knowledge Base,
+Knowledge-Critic (Agent, der Lions Playbooks auf Widersprüche/Lücken gegenliest).
 
 ## Session-Log
 - **2026-07-15 — P-1 (Architecture Review):** ARCHITECTURE_REVIEW.md erstellt
@@ -248,3 +263,14 @@ MCP-Server, HubSpot-Sync, Tauri-App, Embeddings für Knowledge Base.
   Momentum) vom Nutzer. Klar diskriminierende Profile: Nordwind (25, NEGATIV,
   6× ZU_PRUEFEN), Aurelia (55, NEUTRAL, 1× GESICHERT), Meridian (40, NEUTRAL,
   2× GESICHERT). Gate P2 erfüllt — Golden Set ist P4-eval-bereit.
+- **2026-07-15 — P3 (Knowledge Base):** Loader (`src/knowledge/loader.py`,
+  `load_for(agent, topics)`) mit Datei-Auswahl via Frontmatter (agents/topics)
+  und Abschnitts-Selektion via `<!-- topic: x -->`; Frontmatter-Handparser (kein
+  pyyaml). Lions echte Playbooks verbatim übernommen (meddpicc_playbook ~11k
+  Zeichen, cold_call_playbook); 8 Stubs (`status: STUB`, vom Loader übersprungen)
+  für die restlichen Dateien. Prompt-Anpassungen nach Review mit Lion: Limit
+  24k + laut fehlschlagen statt 8k + still trunkieren (Befund 3.2/4.5); Lions
+  Marker-Format; knowledge/*.md gitignored (IP-Schutz, Repo public). 42 pytest
+  grün (tests/knowledge/ mit synthetischen Fixtures). Offen: Lion liefert
+  restliche Playbooks nach (Loader findet sie automatisch); "Knowledge-Critic"
+  (System challenged Playbooks selbst) als Backlog-Kandidat notiert.

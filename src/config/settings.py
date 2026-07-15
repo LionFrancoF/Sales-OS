@@ -19,7 +19,13 @@ MODEL_DEFAULT: Final[str] = "claude-sonnet-5"             # Meeting-Prep, Briefi
 
 # --- Schwellen ---
 RESOLUTION_THRESHOLD: Final[float] = 0.8   # Entity-Resolution: darunter nachfragen statt raten
-KNOWLEDGE_CHAR_LIMIT: Final[int] = 8000    # Max. Zeichen des injizierten Knowledge-Blocks
+
+# Max. Zeichen des injizierten Knowledge-Blocks. Bewusst grosszuegig: der Block
+# ist ein cache-faehiger Prompt-Prefix (Prompt-Caching -> grosse stabile Bloecke
+# sind billig). Das Limit ist ein Runaway-Backstop, KEIN Sparinstrument — bei
+# Ueberschreitung schlaegt der Loader LAUT fehl statt still zu trunkieren
+# (P-1 Befund 3.2/4.5, Entscheidung Lion).
+KNOWLEDGE_CHAR_LIMIT: Final[int] = 24_000
 
 # --- Cost-/Call-Deckel (P-1 Befund 2.8: Circuit Breaker) ---
 MAX_LLM_CALLS_PER_COMMAND: Final[int] = 25        # harter Anschlag gegen Runaway-Schleifen

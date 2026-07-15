@@ -50,8 +50,10 @@ Schwellen, `STAGE_GATES`, Cost-/Call-Deckel). Bewusst **kein** `config.yaml`
 und **keine** Feature-Flags in V1 (siehe `ARCHITECTURE_REVIEW.md`, Befund 1.4).
 
 ## Eigenes Wissen hinzufügen
-Playbooks liegen in `knowledge/` als Markdown mit YAML-Frontmatter — Details
-in `knowledge/README.md` (ab P3 aktiv).
+Eine `.md` in `knowledge/` ablegen, Frontmatter (`topics`, `agents`, `status: FREIGEGEBEN`)
+setzen, Abschnitte mit `<!-- topic: x -->` markieren — der Loader findet sie automatisch.
+Details: `knowledge/README.md`. **Hinweis:** Playbook-Inhalte sind gitignored
+(persönliches Wissen, Repo ist public) — Ordner separat sichern.
 
 ## Domain-Modelle (P1)
 Der gemeinsame Vertrag aller Agenten (`src/domain/`, Pydantic v2):

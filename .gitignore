@@ -16,3 +16,8 @@ outputs/
 
 # macOS
 .DS_Store
+
+# Persoenliches Sales-Wissen (Lion) — Repo ist public, Playbooks bleiben lokal.
+# ACHTUNG: dadurch kein Git-Backup fuer diese Inhalte — separat sichern!
+knowledge/*.md
+!knowledge/README.md

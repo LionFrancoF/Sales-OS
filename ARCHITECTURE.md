@@ -61,7 +61,7 @@ innen nach außen; Cross-Layer-Verstöße sind Bugs.
 | Schicht | Pfad | Prompt | Status |
 |---|---|---|---|
 | Domain | `src/domain/` | P1 | ✓ Modelle stehen |
-| Knowledge | `knowledge/` + `src/knowledge/` | P3 | leer (P0) |
+| Knowledge | `knowledge/` + `src/knowledge/` | P3 | ✓ Loader + Playbooks (Inhalte gitignored) |
 | Agenten | `src/agents/` | P4, M1–M4 | leer (P0) |
 | Repository | `src/repository/` | P5 | leer (P0) |
 | Orchestrator | `src/orchestrator/` | P6 | leer (P0) |
