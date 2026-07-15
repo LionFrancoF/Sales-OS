@@ -10,7 +10,16 @@ immer von hier importieren.
 """
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Final
+
+# --- Persistenz (ab Schicht 5) ---
+# SQLite, eine Datei, DB = einzige Quelle der Wahrheit (P-1 Befund 4.4).
+# Schema-Wandel-Konvention V1 (Befund 2.5, Entscheidung Lion): bei
+# Modellaenderung wird die lokale .db geloescht und neu aufgebaut —
+# Testdaten sind synthetisch reproduzierbar. Migrations-Konvention kommt,
+# sobald echte Daten schuetzenswert sind.
+DB_PATH: Final[Path] = Path(__file__).resolve().parents[2] / "sales_os.db"
 
 # --- Modell-Tiering (Stand Juli 2026) ---
 MODEL_CLASSIFY: Final[str] = "claude-haiku-4-5-20251001"  # Klassifizierung, Entity-Resolution, Extraktion

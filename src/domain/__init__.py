@@ -14,6 +14,8 @@ from src.domain.contact import (
     RelationshipStrength,
     RoleInDeal,
 )
+from src.domain.contact_history import ContactHistoryEntry
+from src.domain.correction import Correction
 from src.domain.deal import Deal, DealStage, Framework
 from src.domain.meddpicc import (
     Confidence,
@@ -32,6 +34,8 @@ __all__ = [
     "Influence",
     "Disposition",
     "RelationshipStrength",
+    "ContactHistoryEntry",
+    "Correction",
     "Deal",
     "DealStage",
     "Framework",

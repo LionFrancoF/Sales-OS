@@ -113,6 +113,20 @@ Was, Entscheidung, Warum). Volle Begründung: ARCHITECTURE_REVIEW.md.
 - **[P-1 / 1.8] `compare`-CLI-Befehl** → ÜBERNOMMEN (gestrichen). Der Analyzer
   berechnet `trend` bereits gegen den previous_snapshot; Anzeige kommt in P5
   (`show-deal`). Warum: redundante Oberfläche für dieselbe Information.
+- **[P-1 / 1.2] Event-Log-Tabelle** → ÜBERNOMMEN (gestrichen). Keine
+  events-Tabelle in P5. Warum: Vorrats-Bau für Backlog-Features; wird mit
+  Won/Lost bzw. Signal-Monitoring eingeführt, wenn deren Anforderungen das
+  Schema präzise definieren.
+- **[P-1 / 1.9 + 4.4] Doppel-Persistenz** → ÜBERNOMMEN (DB only). Snapshots
+  bekannter Deals landen NUR in der DB; outputs/-JSON nur für Analysen ohne
+  DB-Deal und eval-Leseartefakte. Warum: eine Quelle der Wahrheit, kein
+  Divergenz-Risiko.
+- **[P-1 / 2.5] Schema-Wandel** → V1-Konvention statt Migrations-Gerüst: bei
+  Modelländerung wird die lokale .db gelöscht/neu aufgebaut (Testdaten
+  synthetisch reproduzierbar). Migrations-Konvention kommt, sobald echte
+  Daten schützenswert sind. Dokumentiert in settings.py.
+- **[P5 / LlmCall-Tabelle]** → nicht gebaut (folgt aus 1.1, bereits in
+  Tech-Stack dokumentiert: eine Log-Zeile, keine DB-Cost-Tabelle in V1).
 
 Weitere P-1-Befunde (Capture-first, Eval-n=3, Snapshot-als-Kontextgrenze,
 Event-Log-Tabelle, Trigger-Generizität, Dual-Framework, Re-Analyse-Dedup,
@@ -313,3 +327,22 @@ Knowledge-Critic (Agent, der Lions Playbooks auf Widersprüche/Lücken gegenlies
   Offen: Lions Eval-Iterationsphase (Masterplan Teil 5: eval lesen →
   prompts.py/Playbook schärfen → wieder eval); Momentum-Kalibrierung
   auffällig (Modell urteilt extremer als Lions NEUTRAL-Referenzen).
+- **2026-07-15 — P5 (Persistenz & Feedback-Speicher):** SQLite hinter
+  Repository-Schicht (`src/repository/`: db.py mit Schema, je Aggregat ein
+  Modul; Signaturen nehmen/liefern nur Domain-Modelle). 7 Tabellen —
+  snapshots/activities/contact_history append-only, raw_text_hash UNIQUE.
+  Entity-Resolution-Grundlagen: find_deal_candidates (Account 0.5 + Deal-Tokens
+  0.4 + Kontakte 0.3, cap 1.0), find_contact_candidates (exakt/Jaccard/difflib).
+  update_contact_alignment protokolliert jede Änderung in contact_history.
+  Domain: Correction (aus P1-Deferral zurück) + ContactHistoryEntry neu.
+  CLI: add-account/add-deal/add-contact (mit Dubletten-Schutz)/list-deals/
+  show-deal/correct; analyze lädt bei --deal den Vorgänger-Snapshot und
+  speichert append-only in die DB (DB only, 4.4). Entscheidungen: keine
+  Event-Tabelle (1.2), keine LlmCall-Tabelle (1.1), kein Feature-Flag —
+  Corrections werden gesammelt, Injektion bleibt unverdrahtet bis nach M4.
+  DoD live erfüllt: Account+Deal+Kontakte → analyze (Erstbewertung, DB) →
+  show-deal → correct (original_value aus Snapshot aufgelöst) → analyze Note 2
+  → erste echte Trend-Bestimmung (3× VERBESSERT exakt bei den neu belegten
+  Dimensionen, Score 22→34, 2 append-only Snapshots). 76 pytest grün.
+  Offen für P6: Transaktionsgrenze (2.4), Re-Analyse-Dedup (2.6),
+  Won/Lost-Minimalerfassung (2.7).

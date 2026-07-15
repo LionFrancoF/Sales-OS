@@ -32,18 +32,25 @@ python -m src.cli analyze tests/sample_notes/nordwind_01.txt --deal "Nordwind"
 
 # Golden-Set-Eval: Ist vs. Soll qualitativ je Deal (bewusst ohne Gesamtmetrik, n=3)
 python -m src.cli eval
+
+# Persistenz (P5): Stammdaten anlegen, analysieren, korrigieren
+python -m src.cli add-account --name "Nordwind Logistics" --industry Logistik
+python -m src.cli add-deal "Nordwind Logistics" --name "Ops-Analytics" --stage DISCOVERY
+python -m src.cli analyze tests/sample_notes/nordwind_01.txt --deal "Ops-Analytics"  # -> DB, append-only
+python -m src.cli show-deal "Ops-Analytics"     # Snapshot-Kurzfassung + Kontakte + Korrekturen
+python -m src.cli correct "Ops-Analytics" --field dimensions.champion.confidence --value ZU_PRUEFEN
 ```
 
-Implementiert: `analyze`, `eval`. Übrige Befehle sind Platzhalter für ihre Schicht:
+Implementiert: `analyze`, `eval` (P4) und die Persistenz-Befehle (P5):
 
 | Befehl | Zweck | Schicht |
 |---|---|---|
-| `analyze` ✓ | Notes → MEDDPICC-Analyse (Opus 4.8, Structured Outputs, Prompt-Caching) | P4 |
+| `analyze` ✓ | Notes → MEDDPICC-Analyse; mit `--deal` inkl. Vorgänger-Snapshot/Trend + DB-Speicherung | P4/P5 |
 | `eval` ✓ | Golden-Set: Ist vs. Soll qualitativ | P4 |
+| `add-account` / `add-deal` / `add-contact` ✓ | Stammdaten anlegen (Kontakt mit Dubletten-Schutz) | P5 |
+| `list-deals` / `show-deal` ✓ | Deals ansehen (Snapshot, Kontakte, Korrekturen) | P5 |
+| `correct` ✓ | Korrektur zum letzten Snapshot speichern (Feedback wird gesammelt; Injektion nach M4) | P5 |
 | `ingest` | Text aufnehmen, klassifizieren, routen | P6 |
-| `correct` | Korrektur speichern (Feedback-Loop) | P5 |
-| `add-account` / `add-deal` / `add-contact` | Stammdaten anlegen | P5 |
-| `list-deals` / `show-deal` | Deals ansehen | P5 |
 | `research` | Deep-Research zu einem Account | M1 |
 | `account-map` | Stakeholder-Map | M2 |
 | `briefing` | Pipeline-Briefing | M3 |
@@ -51,6 +58,14 @@ Implementiert: `analyze`, `eval`. Übrige Befehle sind Platzhalter für ihre Sch
 
 _Bewusst kein `compare`-Befehl: der Analyzer berechnet `trend` bereits gegen den
 vorigen Snapshot (Review-Befund 1.8)._
+
+## Persistenz (P5)
+SQLite (`sales_os.db`, gitignored) hinter einer Repository-Schicht — dem einzigen
+Datenbankzugang. Snapshots/Activities/ContactHistory sind **append-only**; die DB ist
+die **einzige Quelle der Wahrheit** für Snapshots bekannter Deals (Befund 4.4).
+**Schema-Wandel-Konvention V1:** Bei Modelländerungen wird die lokale `.db` gelöscht
+und neu aufgebaut (Befund 2.5) — Testdaten sind reproduzierbar; eine
+Migrations-Konvention kommt, sobald echte Daten schützenswert sind.
 
 ## Konfiguration
 Zentral in `src/config/settings.py` (typisierte Konstanten: Modelle,

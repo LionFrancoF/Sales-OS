@@ -1,10 +1,10 @@
 # ARCHITECTURE.md — Sales OS
 
 Systemübersicht und Datenfluss. Wird bei jeder Schicht aktualisiert (DoD 5).
-Stand: **P4 (erster Agent)** — Domain (P1), Knowledge-Loader (P3) und der
-MEDDPICC-Analyzer (P4) stehen; CLI-Befehle `analyze`/`eval` laufen gegen die
-echte API (JSON-Ausgabe nach `outputs/`). Noch keine DB (P5), kein
-Orchestrator (P6), keine API (P7) — der Datenfluss unten ist Ziel-Architektur.
+Stand: **P5 (Persistenz)** — Domain (P1), Knowledge (P3), Analyzer (P4) und
+SQLite-Repository (P5) stehen. `analyze --deal` lädt den Vorgänger-Snapshot
+(Trend) und speichert append-only in die DB (einzige Wahrheit, Befund 4.4).
+Noch kein Orchestrator (P6), keine API (P7).
 
 ## Prinzip
 KEIN autonomes Multi-Agenten-System. Ein **Orchestrator** ruft spezialisierte
@@ -65,7 +65,7 @@ innen nach außen; Cross-Layer-Verstöße sind Bugs.
 | Domain | `src/domain/` | P1 | ✓ Modelle stehen |
 | Knowledge | `knowledge/` + `src/knowledge/` | P3 | ✓ Loader + Playbooks (Inhalte gitignored) |
 | Agenten | `src/agents/` | P4, M1–M4 | ✓ MEDDPICC-Analyzer (Opus 4.8, Structured Outputs, Caching, Circuit-Breaker) |
-| Repository | `src/repository/` | P5 | leer (P0) |
+| Repository | `src/repository/` | P5 | ✓ SQLite, append-only Snapshots/Activities/History, Entity-Resolution |
 | Orchestrator | `src/orchestrator/` | P6 | leer (P0) |
 | API | `src/api/` | P7 | leer (P0) |
 | CLI | `src/cli.py` | P0 | Gerüst (Platzhalter) |
