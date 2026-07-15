@@ -213,18 +213,37 @@ def test_router_updates_existing_contact_with_history(setup_deal, mock_classify,
     assert history[0].source.startswith("ingest:")
 
 
-def test_router_ambiguous_contact_asks(setup_deal, mock_classify, mock_analyze):
+def test_router_unique_first_name_auto_matches(setup_deal, mock_classify, mock_analyze):
+    """P6-Beobachtung behoben: eindeutiger Vorname wird automatisch zugeordnet (kein Nachfragen)."""
     _, deal = setup_deal
     save_contact(Contact(account_id=deal.account_id, name="Dr. Katharina Bender"))
     mock_classify["value"] = _classification(
         signals=Signals(meddpicc_relevant=False, neue_kontakte=True, stakeholder_update=False,
                         next_steps=False, termin_zusage=False, wettbewerb=False),
         contacts=[ClassifiedContact(name="Katharina", title=None,
+                                    role_in_deal=None, influence="HOCH", disposition=None)],
+    )
+    report = process_note("katharina hat angerufen", deal_name="Ops-Analytics",
+                          ask=lambda q, o: pytest.fail("darf nicht fragen — Vorname ist eindeutig"))
+    contacts = list_contacts(deal.account_id)
+    assert len(contacts) == 1                          # keine Dublette
+    assert contacts[0].influence == "HOCH"             # belegtes Feld aktualisiert
+    assert any("aktualisiert" in a for a in report.actions)
+
+
+def test_router_ambiguous_contact_asks(setup_deal, mock_classify, mock_analyze):
+    """Zwei Kontakte mit gleichem Vornamen -> Nachfrage-Band; ohne Antwort ueberspringen."""
+    _, deal = setup_deal
+    save_contact(Contact(account_id=deal.account_id, name="Katharina Bender"))
+    save_contact(Contact(account_id=deal.account_id, name="Katharina Wolf"))
+    mock_classify["value"] = _classification(
+        signals=Signals(meddpicc_relevant=False, neue_kontakte=True, stakeholder_update=False,
+                        next_steps=False, termin_zusage=False, wettbewerb=False),
+        contacts=[ClassifiedContact(name="Katharina", title=None,
                                     role_in_deal=None, influence=None, disposition=None)],
     )
-    # nur Vorname -> Score im Ask-Band; ohne Antwort: konservativ ueberspringen, keine Dublette
     report = process_note("katharina hat angerufen", deal_name="Ops-Analytics", ask=lambda q, o: None)
-    assert len(list_contacts(deal.account_id)) == 1
+    assert len(list_contacts(deal.account_id)) == 2    # keine Dublette, nichts geraten
     assert any("uebersprungen" in a for a in report.actions)
 
 

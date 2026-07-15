@@ -187,3 +187,23 @@ def test_find_contact_candidates_fuzzy():
     partial = find_contact_candidates(a.id, "Katharina Bender")
     assert partial and partial[0][0].name == "Dr. Katharina Bender"
     assert all(c.name != "Andreas Kliment" for c, s in partial if s > 0.5)
+
+
+def test_unique_first_name_auto_matches():
+    """P6-Beobachtung behoben: eindeutiger Vorname im Account-Kontext -> >=0.85 (auto)."""
+    a = _setup_account()
+    markus = save_contact(Contact(account_id=a.id, name="Markus Reinhardt"))
+    save_contact(Contact(account_id=a.id, name="Sabine Vogt"))
+
+    result = find_contact_candidates(a.id, "Markus")
+    assert result[0][0].id == markus.id
+    assert result[0][1] >= 0.85  # eindeutig -> automatische Zuordnung
+
+
+def test_ambiguous_first_name_stays_in_ask_band():
+    a = _setup_account()
+    save_contact(Contact(account_id=a.id, name="Markus Reinhardt"))
+    save_contact(Contact(account_id=a.id, name="Markus Weber"))
+
+    result = find_contact_candidates(a.id, "Markus")
+    assert result and all(score < 0.8 for _, score in result)  # mehrdeutig -> nachfragen

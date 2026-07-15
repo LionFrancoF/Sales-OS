@@ -63,13 +63,18 @@ def find_contact_candidates(account_id: str, name: str) -> list[tuple[Contact, f
     """Kontakt-Resolution: aehnliche bestehende Kontakte des Accounts (Dubletten-Schutz).
 
     Score: 1.0 bei exaktem Namen (case-insensitiv), sonst max(Token-Jaccard,
-    difflib-Ratio). Kandidaten ab 0.3, absteigend sortiert. Die Schwelle fuer
-    "automatisch zuordnen vs. nachfragen" wendet der Orchestrator an (P6).
+    difflib-Ratio). Zusatzregel (P6-Beobachtung): ein Einzel-Token-Name
+    ("Markus"), der im Account-Kontext GENAU EINEN Kontakt per Namens-Token
+    trifft, ist eindeutig -> 0.85 (automatische Zuordnung statt Nachfrage);
+    treffen mehrere, bleibt es im Nachfrage-Band. Kandidaten ab 0.3,
+    absteigend sortiert; die Schwelle wendet der Orchestrator an (P6).
     """
     needle = name.strip().lower()
     needle_tokens = set(needle.split())
+    contacts = list_contacts(account_id)
+
     results: list[tuple[Contact, float]] = []
-    for contact in list_contacts(account_id):
+    for contact in contacts:
         existing = contact.name.strip().lower()
         if existing == needle:
             score = 1.0
@@ -80,6 +85,17 @@ def find_contact_candidates(account_id: str, name: str) -> list[tuple[Contact, f
             score = max(jaccard, ratio)
         if score >= 0.3:
             results.append((contact, round(score, 3)))
+
+    # Vorname-Eindeutigkeit: genau EIN Kontakt traegt das Token -> sichere Zuordnung
+    if len(needle_tokens) == 1:
+        token = next(iter(needle_tokens))
+        token_hits = [c for c in contacts if token in c.name.strip().lower().split()]
+        if len(token_hits) == 1:
+            hit = token_hits[0]
+            results = [(c, max(s, 0.85) if c.id == hit.id else s) for c, s in results]
+            if all(c.id != hit.id for c, _ in results):
+                results.append((hit, 0.85))
+
     return sorted(results, key=lambda t: -t[1])
 
 

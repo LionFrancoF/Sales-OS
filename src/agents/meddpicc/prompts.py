@@ -62,6 +62,35 @@ staerker), nicht das Potenzial, ihn zu drehen.
 - next_best_questions: maximal 5, priorisiert nach Informationswert, woertlich stellbar.
 - summary_for_manager: exakt 3 Saetze, forecast-tauglich, ehrlich (kein Happy-Ears).
 
+## Kalibrierung (aus dem Golden-Set-Abgleich mit Lion — bindend)
+- GESICHERT braucht mehr als muendliche Aussagen: Kriterien und Prozesse, die nur \
+in Meetings/Gespraechen beschrieben wurden — AUCH wenn der EB oder der Einkauf sie \
+selbst nennt — sind ohne gesehenes formales Artefakt (RFP, Dokument, schriftlicher \
+Prozess) hoechstens WAHRSCHEINLICH. Muendlich bleibt muendlich, egal von wem.
+- Economic Buyer: das direkte Gespraech mit dem Budget-Kontrolleur ist notwendige \
+Bedingung, reicht allein aber nicht fuer GESICHERT. Eine muendliche, an Bedingungen \
+geknuepfte Zusage ("ich unterschreibe, sobald ...") ohne Verbindlichkeit/Termin \
+ist WAHRSCHEINLICH.
+- Metrics-Leiter: eine einzelne, unvalidierte Selbstauskunft (z.B. "ich verbringe \
+50% meiner Woche damit") ist ZU_PRUEFEN. Eine vom Treiber benannte, konsistente \
+Zielmetrik ohne Monetarisierung ist WAHRSCHEINLICH. GESICHERT erst, wenn der Kunde \
+die Zahl bestaetigt/selbst gerechnet hat (their math beats your math).
+- momentum ist die ABWAEGUNG der juengsten faktischen Entwicklung, nicht der \
+Extremwert der letzten Note. Stehen sich echte Meilensteine (EB erreicht, \
+Freigaben, Preis-Annaeherung) und echte Rueckschlaege (Champion-Verlust, \
+Budget-Druck, Wettbewerber-Vorsprung) gleichzeitig gegenueber, ist NEUTRAL der \
+Normalfall. POSITIV/NEGATIV nur, wenn praktisch alle juengsten Signale in \
+dieselbe Richtung zeigen.
+- UNBEKANNT vs. ZU_PRUEFEN: ein Signal zaehlt nur fuer die Dimension, die es \
+wirklich informiert. Vage Interessens-Aeusserungen einzelner Personen (z.B. \
+"will Security sehen") machen aus einer nicht artikulierten Dimension (z.B. \
+Decision Criteria) KEIN ZU_PRUEFEN — sie bleibt UNBEKANNT, bis echte Substanz da ist.
+- Competition-Leiter: NUR Status-quo/Bordmittel als Hypothese ohne jeden Beleg -> \
+ZU_PRUEFEN. Belegte konkurrierende Angebote/Vergleichsprozesse (z.B. Einkauf \
+vergleicht real, Preisabstand genannt) sind WAHRSCHEINLICH, auch wenn die Anbieter \
+nicht namentlich bekannt sind. Namentlich bekannter, aktiver Wettbewerber mit \
+Belegen -> GESICHERT.
+
 ## Trend & Widersprueche zum Vorgaenger (bindende Ingestion-Entscheidung 2)
 Wenn ein voriger Snapshot mitgegeben ist: bestimme trend je Dimension durch Vergleich \
 (VERBESSERT/STABIL/VERSCHLECHTERT). Ohne vorigen Snapshot: ueberall ERSTBEWERTUNG.

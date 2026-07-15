@@ -392,3 +392,23 @@ Knowledge-Critic (Agent, der Lions Playbooks auf Widersprüche/Lücken gegenlies
   verifiziert (echte P6-Daten via GET /deals, /docs 200). 104 pytest grün.
   Damit sind Schichten 0–7 komplett; als Nächstes M1–M4. Offen: Lions
   Eval-Iterationsphase (P4).
+- **2026-07-15 — Eval-Iteration (2 Zyklen) + Vorname-Resolution:**
+  Kalibrier-Block im Analyzer-Prompt aus dem Golden-Set-Abgleich (Lions
+  Maßstäbe kodiert): GESICHERT braucht formales Artefakt (mündlich bleibt
+  mündlich, auch vom EB/Einkauf); EB-Regel (direktes Gespräch notwendig,
+  bedingte mündliche Zusage = WAHRSCHEINLICH); Metrics-Leiter (Selbstauskunft
+  ZU_PRUEFEN → Treiber-Zielmetrik WAHRSCHEINLICH → kundengerechnete Zahl
+  GESICHERT); Momentum = Abwägung, NEUTRAL als Normalfall bei gemischter Lage;
+  Signal-Attribution (UNBEKANNT bleibt UNBEKANNT); Competition-Leiter
+  (Status-quo-Hypothese ZU_PRUEFEN → belegte unbenannte Angebote WAHRSCHEINLICH
+  → benannter aktiver Wettbewerber GESICHERT). Confidence-Treffer 17→19→20/24
+  (Aurelia zuletzt 8/8, Nordwind-Lauf-2 8/8); bewusst nach 2 Zyklen gestoppt:
+  verbleibende Misses sind flippende Borderline-Zellen (n=3-Rauschen,
+  Befund 2.3 — mehr Tuning wäre Overfitting). BEFUND an Lion: Momentum bleibt
+  konsistent 1/3 (Modell: Aurelia POSITIV, Meridian NEGATIV vs. Lions NEUTRAL) —
+  echte Kalibrierungsdifferenz, keine Zufallsstreuung; ebenso Aurelia-Score
+  konstant +15. → Lion entscheidet: Momentum-/Score-Definition im
+  meddpicc_playbook präzisieren ODER die zwei NEUTRAL-Referenzen überdenken.
+  Außerdem P6-Beobachtung behoben: eindeutiger Vorname im Account-Kontext
+  (genau 1 Token-Treffer) → 0.85 auto-Zuordnung statt Nachfrage; mehrdeutig
+  bleibt Nachfrage-Band. 107 pytest grün.
