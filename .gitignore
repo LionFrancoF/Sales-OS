@@ -1,0 +1,15 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Datenbanken (SQLite ab Schicht 5)
+*.db
+
+# Virtuelle Umgebung
+venv/
+
+# Agenten-Outputs
+outputs/
