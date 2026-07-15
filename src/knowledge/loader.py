@@ -25,7 +25,8 @@ log = logging.getLogger("sales_os.knowledge")
 # Repo-Root/knowledge — relativ zu dieser Datei (src/knowledge/loader.py).
 KNOWLEDGE_DIR = Path(__file__).resolve().parents[2] / "knowledge"
 
-_SECTION_MARKER = re.compile(r"<!--\s*topic:\s*([\w-]+)\s*-->")
+# Auch Multi-Topic-Marker unterstuetzen: <!-- topic: negotiation, procurement -->
+_SECTION_MARKER = re.compile(r"<!--\s*topic:\s*([\w-]+(?:\s*,\s*[\w-]+)*)\s*-->")
 _LIST_VALUE = re.compile(r"^\[(.*)\]$")
 
 
@@ -34,14 +35,14 @@ class _Part:
     """Ein selektierter Textbaustein (Praeambel oder Abschnitt) einer Datei."""
 
     file: str
-    topic: str | None  # None = Praeambel (Titel/Einleitung vor dem ersten Marker)
+    topics: list[str] | None  # None = Praeambel (Titel/Einleitung vor dem ersten Marker)
     text: str
 
     @property
     def header(self) -> str:
-        if self.topic is None:
+        if self.topics is None:
             return f"=== knowledge/{self.file} ==="
-        return f"=== knowledge/{self.file} :: {self.topic} ==="
+        return f"=== knowledge/{self.file} :: {', '.join(self.topics)} ==="
 
     def render(self) -> str:
         return f"{self.header}\n{self.text.strip()}"
@@ -75,10 +76,10 @@ def _parse_frontmatter(raw: str) -> tuple[dict, str]:
     return meta, body
 
 
-def _split_sections(body: str) -> tuple[str, list[tuple[str, str]]]:
-    """Zerlegt einen Datei-Body an `<!-- topic: x -->`-Markern.
+def _split_sections(body: str) -> tuple[str, list[tuple[list[str], str]]]:
+    """Zerlegt einen Datei-Body an `<!-- topic: x[, y] -->`-Markern.
 
-    Liefert (praeambel, [(topic, text), ...]). Der Marker gehoert zum Abschnitt
+    Liefert (praeambel, [(topics, text), ...]). Der Marker gehoert zum Abschnitt
     dahinter; die Ueberschriftzeile VOR dem Marker (z.B. `## Champion`) wird dem
     Abschnitt zugeschlagen, damit Abschnitte selbsterklaerend bleiben.
     """
@@ -97,10 +98,11 @@ def _split_sections(body: str) -> tuple[str, list[tuple[str, str]]]:
         starts.append(prev_line_start if prev_line.lstrip().startswith("#") else line_start)
 
     preamble = body[: starts[0]]
-    sections: list[tuple[str, str]] = []
+    sections: list[tuple[list[str], str]] = []
     for i, m in enumerate(matches):
         end = starts[i + 1] if i + 1 < len(matches) else len(body)
-        sections.append((m.group(1), body[starts[i] : end]))
+        tags = [t.strip() for t in m.group(1).split(",") if t.strip()]
+        sections.append((tags, body[starts[i] : end]))
     return preamble, sections
 
 
@@ -147,11 +149,11 @@ def load_for(
         preamble, sections = _split_sections(body)
         parts: list[_Part] = []
         if topics:
-            wanted = [(t, txt) for t, txt in sections if t in topics]
+            wanted = [(ts, txt) for ts, txt in sections if set(ts) & set(topics)]
             if wanted:
                 if preamble.strip():
                     parts.append(_Part(path.name, None, preamble))
-                parts.extend(_Part(path.name, t, txt) for t, txt in wanted)
+                parts.extend(_Part(path.name, ts, txt) for ts, txt in wanted)
             elif not sections and topic_overlap:
                 parts.append(_Part(path.name, None, body))  # markerlose Datei
             score = len(wanted)

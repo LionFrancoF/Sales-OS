@@ -105,6 +105,19 @@ def test_frontmatter_missing_agents_tolerated(tmp_path: Path):
     assert load_for("x", base_dir=tmp_path) == ""
 
 
+def test_multi_topic_marker_matches_each_topic(tmp_path: Path):
+    _write(
+        tmp_path,
+        "multi.md",
+        "---\ntopics: [negotiation, procurement]\nagents: []\n---\n\n"
+        "## Verhandlung\n<!-- topic: negotiation, procurement -->\n- Give-Get-Regel\n",
+    )
+    for topic in ("negotiation", "procurement"):
+        block = load_for("x", topics=[topic], base_dir=tmp_path)
+        assert "Give-Get-Regel" in block, f"topic={topic} nicht gefunden"
+    assert ":: negotiation, procurement ===" in load_for("x", topics=["negotiation"], base_dir=tmp_path)
+
+
 def test_stub_files_are_skipped(tmp_path: Path):
     _write(
         tmp_path,
