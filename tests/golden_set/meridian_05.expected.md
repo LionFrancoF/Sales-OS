@@ -82,7 +82,7 @@
 ## Gesamt
 - Overall score (0–100): 40
 - Score rationale: Mid-stage, aber im Wettbewerb hinten: EB erreicht (GESICHERT) und Kriterien bekannt, doch Champion abgetaucht (ZU_PRUEFEN), Wettbewerber Fluxion GESICHERT und operativ voraus, Metrics/ROI + Prozess/Paper unklar. 40 = besser qualifiziert als ein reines Discovery-Deal (EB + Kriterien vorhanden), aber die klare, gewinnende Konkurrenz + der fehlende Champion drücken es ins untere Mittelfeld.
-- Momentum (POSITIV / NEUTRAL / NEGATIV): NEUTRAL  (strittig: als Fakten-Abwägung EB-Termin ↔ Verschlechterung gesetzt; strenge Lesart der jüngsten Note 05 wäre NEGATIV — beim Eval im Blick behalten)
+- Momentum (POSITIV / NEUTRAL / NEGATIV): NEUTRAL
 - Deal risks:
   1. Champion abgetaucht — Julia ~3 Wochen weg, Rolle unklar; Deal war single-threaded auf sie; Nina machtlos.
   2. Wettbewerber operativ voraus — Fluxion POC gestartet, interner Fürsprecher (Grothe), Preisvorteil.
