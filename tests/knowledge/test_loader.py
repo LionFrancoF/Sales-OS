@@ -118,6 +118,19 @@ def test_multi_topic_marker_matches_each_topic(tmp_path: Path):
     assert ":: negotiation, procurement ===" in load_for("x", topics=["negotiation"], base_dir=tmp_path)
 
 
+def test_marker_with_status_suffix_matches(tmp_path: Path):
+    _write(
+        tmp_path,
+        "status.md",
+        "---\ntopics: [economic_buyer]\nagents: []\n---\n\n"
+        "## EB\n<!-- topic: economic_buyer, metrics | status: hypothese -->\n- Wer stoppen kann.\n",
+    )
+    for topic in ("economic_buyer", "metrics"):
+        block = load_for("x", topics=[topic], base_dir=tmp_path)
+        assert "Wer stoppen kann." in block, f"topic={topic} nicht gefunden"
+        assert "status: hypothese" in block  # Evidenz-Info bleibt im Text sichtbar
+
+
 def test_stub_files_are_skipped(tmp_path: Path):
     _write(
         tmp_path,

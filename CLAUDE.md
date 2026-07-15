@@ -274,3 +274,12 @@ Knowledge-Critic (Agent, der Lions Playbooks auf Widersprüche/Lücken gegenlies
   grün (tests/knowledge/ mit synthetischen Fixtures). Offen: Lion liefert
   restliche Playbooks nach (Loader findet sie automatisch); "Knowledge-Critic"
   (System challenged Playbooks selbst) als Backlog-Kandidat notiert.
+- **2026-07-15 — P3-Nachtrag (Wissensbasis komplett):** Alle 11 Playbooks
+  geliefert und FREIGEGEBEN (inkl. neuer Datei meddpicc_deal_patterns.md:
+  Case-Bibliothek mit Evidenz-Markierung, Frühwarnsignal-Liste, Talk-Tracks,
+  Lions bindende Entscheidungen in Abschnitt 5). Loader an Lions Marker-Formen
+  angepasst: Multi-Topic (`topic: a, b`), Status-Anhang (`| status: hypothese`),
+  und Abschnitts-Marker als präziser Index (zählen auch ohne Frontmatter-Listing).
+  44 pytest grün. OFFEN für P4: Volllast von analyzer/briefing/meeting_prep
+  überschreitet 24k-Limit (41k/36k/43k) — Entscheidung Lion: Limit erhöhen vs.
+  gezielte topics-Selektion je Agent.

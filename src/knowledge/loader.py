@@ -25,8 +25,12 @@ log = logging.getLogger("sales_os.knowledge")
 # Repo-Root/knowledge — relativ zu dieser Datei (src/knowledge/loader.py).
 KNOWLEDGE_DIR = Path(__file__).resolve().parents[2] / "knowledge"
 
-# Auch Multi-Topic-Marker unterstuetzen: <!-- topic: negotiation, procurement -->
-_SECTION_MARKER = re.compile(r"<!--\s*topic:\s*([\w-]+(?:\s*,\s*[\w-]+)*)\s*-->")
+# Marker-Formen der Nutzer-Playbooks:
+#   <!-- topic: champion -->
+#   <!-- topic: negotiation, procurement -->                    (Multi-Topic)
+#   <!-- topic: economic_buyer | status: hypothese -->          (Status-Anhang,
+#       bleibt im Abschnittstext sichtbar — Evidenz-Info fuer den Agenten)
+_SECTION_MARKER = re.compile(r"<!--\s*topic:\s*([\w-]+(?:\s*,\s*[\w-]+)*)\s*(?:\|.*?)?-->")
 _LIST_VALUE = re.compile(r"^\[(.*)\]$")
 
 
@@ -116,12 +120,12 @@ def load_for(
     """Baut den injizierbaren Knowledge-Block fuer einen Agenten.
 
     Auswahl-Logik:
-    - Eine Datei ist Kandidat, wenn `agent` in ihrem `agents:`-Frontmatter steht
-      ODER (bei gesetzten `topics`) ihre `topics:` sich damit ueberschneiden.
-    - Ohne `topics`-Parameter wird die ganze Kandidaten-Datei geladen.
-    - Mit `topics` werden nur Abschnitte geladen, deren `<!-- topic: x -->`-Tag
-      in `topics` liegt (plus Praeambel der Datei als Kontext); eine Datei ohne
-      Marker wird komplett geladen, wenn ihre Datei-Topics passen.
+    - Ohne `topics`-Parameter: alle Dateien komplett, in deren `agents:`-
+      Frontmatter der Agent steht.
+    - Mit `topics`: alle Abschnitte, deren `<!-- topic: x -->`-Tags sich mit
+      `topics` ueberschneiden (plus Datei-Praeambel als Kontext) — unabhaengig
+      vom Datei-Frontmatter, denn die Marker sind der praezise Index. Eine
+      Datei ohne Marker wird komplett geladen, wenn ihre Datei-Topics passen.
     - Sortierung: Dateien mit mehr Topic-Treffern zuerst, dann alphabetisch.
 
     Wirft ValueError, wenn der Block das Limit ueberschreitet (nie still kuerzen).
@@ -142,22 +146,24 @@ def load_for(
         file_agents = meta.get("agents") or []
         file_topics = meta.get("topics") or []
         agent_match = agent in file_agents
-        topic_overlap = bool(topics) and bool(set(topics) & set(file_topics))
-        if not (agent_match or topic_overlap):
-            continue
 
-        preamble, sections = _split_sections(body)
         parts: list[_Part] = []
         if topics:
+            # Abschnitts-Marker sind der praezise Index — sie zaehlen auch dann,
+            # wenn das Datei-Frontmatter das Topic nicht listet (Frontmatter ist
+            # in den Nutzer-Playbooks nur die grobe Uebersicht).
+            preamble, sections = _split_sections(body)
             wanted = [(ts, txt) for ts, txt in sections if set(ts) & set(topics)]
             if wanted:
                 if preamble.strip():
                     parts.append(_Part(path.name, None, preamble))
                 parts.extend(_Part(path.name, ts, txt) for ts, txt in wanted)
-            elif not sections and topic_overlap:
+            elif not sections and set(topics) & set(file_topics):
                 parts.append(_Part(path.name, None, body))  # markerlose Datei
             score = len(wanted)
         else:
+            if not agent_match:
+                continue
             parts.append(_Part(path.name, None, body))  # ganze Datei fuer den Agenten
             score = 0
 
