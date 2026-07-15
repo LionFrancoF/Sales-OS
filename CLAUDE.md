@@ -241,3 +241,10 @@ MCP-Server, HubSpot-Sync, Tauri-App, Embeddings für Knowledge Base.
   Golden-Set-Vorlagen (`tests/golden_set/*.expected.md`, Framework MEDDPICC erzwungen)
   — vom Nutzer von Hand auszufüllen. `sample_notes/README.md` mit Verlaufs-Übersicht.
   Keine Analyse/Bewertung durch Claude. Offen (Nutzer): 3 Vorlagen ausfüllen (Gate P2).
+- **2026-07-15 — P2-Gate (Golden Set ausgefüllt):** Alle 3 Vorlagen
+  (nordwind_04, aurelia_05, meridian_05) im Sparring mit Claude vollständig
+  ausgefüllt (8 MEDDPICC-Dimensionen + Gesamt je Deal). Rollen: Claude =
+  Faktenzulieferer/kritischer Sparringspartner, alle Urteile (Confidence, Score,
+  Momentum) vom Nutzer. Klar diskriminierende Profile: Nordwind (25, NEGATIV,
+  6× ZU_PRUEFEN), Aurelia (55, NEUTRAL, 1× GESICHERT), Meridian (40, NEUTRAL,
+  2× GESICHERT). Gate P2 erfüllt — Golden Set ist P4-eval-bereit.
