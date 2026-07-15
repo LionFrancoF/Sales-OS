@@ -60,9 +60,8 @@ Der gemeinsame Vertrag aller Agenten (`src/domain/`, Pydantic v2):
 - **Deal** — Verkaufschance mit Stage; `win_probability` wird aus der Stage abgeleitet (überschreibbar).
 - **Activity** — append-only Ereignis (Call/E-Mail/Meeting/…); `raw_text_hash` (SHA-256) wird automatisch abgeleitet (Idempotenz-Basis).
 - **DimensionAssessment** / **MeddpiccSnapshot** — das Herzstück: pro Dimension Findings + Confidence + Trend, plus Score, Momentum, Risiken, Next-Best-Questions (append-only, versioniert).
-- **Correction** — manuelle Korrektur (alt → neu) als Grundlage des Feedback-Loops.
 
-_Bewusst noch nicht gebaut: `ContactRelationship` (Beziehungs-Graph) — kommt in M2, wenn es Daten und Nutzen gibt (Review-Befund 1.3/1.10)._
+_Bewusst noch nicht gebaut (P1 schlank, Review-Befund 1.10): `Correction` kommt in P5 (Feedback-Speicher), `ContactRelationship` in M2 — jeweils erst, wenn es Daten und Nutzen gibt._
 
 ## Struktur
 ```

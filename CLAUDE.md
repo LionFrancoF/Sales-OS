@@ -82,11 +82,16 @@ Was, Entscheidung, Warum). Volle Begründung: ARCHITECTURE_REVIEW.md.
   nützlicher als reines Cost-Logging.
 - **[P-1 / 4.3] STAGE_GATES-Ablage** → als Python-`dict` in settings.py statt
   config.yaml. Warum: Folgeentscheidung aus 1.4.
+- **[P-1 / 1.10] Domain-Vorbau in P1 (Correction, ContactRelationship)** →
+  ÜBERNOMMEN (P1 schlank). `Correction` erst in P5 (Feedback-Speicher),
+  `ContactRelationship` erst in M2 (Account-Map). Warum: keine Modelle für Features
+  4-8 Schichten voraus — das ist der Anti-YAGNI, den die Eisernen Regeln verbieten.
+  (Nachträglich korrigiert: correction.py war in P1 versehentlich mitgebaut worden.)
 
 Weitere P-1-Befunde (Capture-first, Eval-n=3, Snapshot-als-Kontextgrenze,
-Event-Log-Tabelle, ContactRelationship-Graph, Trigger-Generizität,
-Dual-Framework, Re-Analyse-Dedup, Won/Lost-Signal u.a.) betreffen spätere
-Schichten (P1/P4/P5/P6) und werden dort pro Punkt entschieden und hier ergänzt.
+Event-Log-Tabelle, Trigger-Generizität, Dual-Framework, Re-Analyse-Dedup,
+Won/Lost-Signal u.a.) betreffen spätere Schichten (P4/P5/P6) und werden dort pro
+Punkt entschieden und hier ergänzt.
 
 ## Architektur (BINDEND)
 KEIN autonomes Multi-Agenten-System. Agenten entscheiden nicht selbst und
@@ -179,6 +184,16 @@ Account → Contacts → Deals → Activities → MeddpiccSnapshots (+ Correctio
 - Nur den aktuellen Auftrag umsetzen. Nicht-Ziele im Prompt sind bindend —
   NICHTS vorbauen.
 - Bei Architektur-Unklarheit: fragen statt annehmen.
+- **Bewusste Entscheidungen / Review-Empfehlungen schlagen den Auftrags-Prompt.**
+  Bei Widerspruch zwischen einem Auftrags-Prompt (z.B. Masterplan-Schritt) und den
+  "Bewussten Entscheidungen" bzw. einer Review-Empfehlung/Plan-Entscheidung gewinnen
+  IMMER die Entscheidungen. Jede beabsichtigte Abweichung wird VOR dem Bauen als
+  Frage gestellt — nie danach als Transparenz-Notiz gemeldet.
+- **Review-Befunde vollständig behandeln.** Wenn eine Scope-Frage aus einem
+  Review-Befund abgeleitet wird, müssen ALLE Teile dieses Befunds surfacet werden,
+  nicht nur einer. (Lehre aus P1: Befund 1.10 nannte ContactRelationship UND
+  Correction als P1-Vorbau — gefragt wurde nur ContactRelationship, Correction still
+  mitgebaut. Das war der Fehler, den diese Regel verhindert.)
 - Nach jeder Session: Session-Log ergänzen (Datum, was gebaut, offene Punkte).
 
 ## Roadmap
@@ -201,9 +216,9 @@ MCP-Server, HubSpot-Sync, Tauri-App, Embeddings für Knowledge Base.
   Basis, `src/cli.py` als argparse-Gerüst mit Platzhalter-Befehlen. venv +
   Dependencies. `python -m src.cli --help` läuft. Keine Logik/Modelle/Prompts.
   Offen: weitere P-1-Befunde bei ihren Schichten entscheiden.
-- **2026-07-15 — P1 (Domain-Kern):** 6 Pydantic-Aggregate in `src/domain/`
+- **2026-07-15 — P1 (Domain-Kern):** Pydantic-Aggregate in `src/domain/`
   (account, contact, deal, activity, meddpicc [DimensionAssessment +
-  MeddpiccSnapshot], correction) + Re-Export in `__init__.py`. IDs uuid4,
+  MeddpiccSnapshot]) + Re-Export in `__init__.py`. IDs uuid4,
   Field-Beschreibungen deutsch, `extra="forbid"`. Ableitungen: Deal.win_probability
   aus settings.STAGE_GATES, Activity.raw_text_hash = SHA-256(raw_text). Snapshot
   validiert erlaubte Dimensions-Keys + paper_process-nur-bei-MEDDPICC. 35 pytest
@@ -212,3 +227,9 @@ MCP-Server, HubSpot-Sync, Tauri-App, Embeddings für Knowledge Base.
   Feld-Politik-Abweichung vom Prompt: unmarkierte beschreibende Felder (title,
   domain, industry, size_estimate) sind optional (Domain-Philosophie UNBEKANNT).
   Offen: weitere P-1-Befunde bei ihren Schichten.
+- **2026-07-15 — P1-Fix (Correction entfernt):** `correction.py` + Test +
+  README-Zeile entfernt. Grund: Befund 1.10 empfahl Correction für P5, wurde bei
+  der P1-Scope-Frage aber nur für ContactRelationship umgesetzt, nicht für
+  Correction (Masterplan-Prompt Punkt 7 hatte de facto Vorrang, ohne Nachfrage).
+  1.10 jetzt als Bewusste Entscheidung formalisiert; zwei Präventionsregeln unter
+  "Arbeitsweise" ergänzt. 30 pytest grün.
