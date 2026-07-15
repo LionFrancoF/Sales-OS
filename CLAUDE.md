@@ -88,10 +88,14 @@ Was, Entscheidung, Warum). Volle Begründung: ARCHITECTURE_REVIEW.md.
   4-8 Schichten voraus — das ist der Anti-YAGNI, den die Eisernen Regeln verbieten.
   (Nachträglich korrigiert: correction.py war in P1 versehentlich mitgebaut worden.)
 - **[P-1 / 3.2 + 4.5] Knowledge-Limit-Verhalten** → ÜBERNOMMEN (modifiziert).
-  KNOWLEDGE_CHAR_LIMIT 8000→24000 (Lions Playbook allein ~11k; Prompt-Caching
-  macht große stabile Blöcke billig); bei Überschreitung LAUTER ValueError mit
+  KNOWLEDGE_CHAR_LIMIT 8000→24000→**64000** (finale Entscheidung Lion nach
+  vollständiger Wissensbasis); bei Überschreitung LAUTER ValueError mit
   Aufstellung — NIE still trunkieren. Warum: stiller Qualitätsverlust wäre eine
   unsichtbare Regression; das Limit ist Runaway-Backstop, kein Sparinstrument.
+  Ladephilosophie: Agenten laden VOLLLAST nach `agents:`-Frontmatter (Lions
+  eigene Kuratierung = die Adressierung; „nichts verlieren" ≠ „jeder sieht
+  alles"). Topic-Profile je Agent NUR, falls der Golden-Set-Eval in P4
+  Unfokussiertheit zeigt — erst messen, dann Mechanik.
 - **[P3 / IP-Schutz] knowledge/-Inhalte nicht ins public Repo** → `knowledge/*.md`
   gitignored (nur README committed). Warum: Playbooks sind Lions persönliches
   Sales-IP; Code public (Portfolio), Wissen lokal. Konsequenz: separates Backup
@@ -280,6 +284,6 @@ Knowledge-Critic (Agent, der Lions Playbooks auf Widersprüche/Lücken gegenlies
   Lions bindende Entscheidungen in Abschnitt 5). Loader an Lions Marker-Formen
   angepasst: Multi-Topic (`topic: a, b`), Status-Anhang (`| status: hypothese`),
   und Abschnitts-Marker als präziser Index (zählen auch ohne Frontmatter-Listing).
-  44 pytest grün. OFFEN für P4: Volllast von analyzer/briefing/meeting_prep
-  überschreitet 24k-Limit (41k/36k/43k) — Entscheidung Lion: Limit erhöhen vs.
-  gezielte topics-Selektion je Agent.
+  44 pytest grün. ENTSCHIEDEN (Lion): Limit auf 64k, Volllast nach
+  agents:-Frontmatter; Topic-Profile nur bei Eval-Befund in P4 (siehe
+  Bewusste Entscheidungen 3.2+4.5).

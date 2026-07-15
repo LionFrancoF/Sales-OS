@@ -25,7 +25,11 @@ RESOLUTION_THRESHOLD: Final[float] = 0.8   # Entity-Resolution: darunter nachfra
 # sind billig). Das Limit ist ein Runaway-Backstop, KEIN Sparinstrument — bei
 # Ueberschreitung schlaegt der Loader LAUT fehl statt still zu trunkieren
 # (P-1 Befund 3.2/4.5, Entscheidung Lion).
-KNOWLEDGE_CHAR_LIMIT: Final[int] = 24_000
+# 64k (Entscheidung Lion, P3): Agenten laden Volllast nach agents:-Frontmatter
+# (Lions eigene Kuratierung); heutige Volllasten 41k/36k/43k passen mit Luft.
+# Fokussierung per Topic-Profilen NUR, falls der Golden-Set-Eval in P4 zeigt,
+# dass der Analyzer unfokussiert wird (erst messen, dann Mechanik).
+KNOWLEDGE_CHAR_LIMIT: Final[int] = 64_000
 
 # --- Cost-/Call-Deckel (P-1 Befund 2.8: Circuit Breaker) ---
 MAX_LLM_CALLS_PER_COMMAND: Final[int] = 25        # harter Anschlag gegen Runaway-Schleifen
