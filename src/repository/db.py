@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS deals (
     amount_estimate REAL,
     expected_close TEXT,
     framework_override TEXT,
+    close_reason TEXT,               -- Warum gewonnen/verloren (Befund 2.7)
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );

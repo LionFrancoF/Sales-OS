@@ -15,12 +15,35 @@ def save_deal(deal: Deal) -> Deal:
     with db.connect() as conn:
         conn.execute(
             """INSERT INTO deals (id, account_id, name, stage, win_probability,
-               amount_estimate, expected_close, framework_override, created_at, updated_at)
+               amount_estimate, expected_close, framework_override, close_reason, created_at, updated_at)
                VALUES (:id, :account_id, :name, :stage, :win_probability,
-               :amount_estimate, :expected_close, :framework_override, :created_at, :updated_at)""",
+               :amount_estimate, :expected_close, :framework_override, :close_reason, :created_at, :updated_at)""",
             deal.model_dump(mode="json"),
         )
     return deal
+
+
+def update_deal_stage(deal_id: str, stage: str, close_reason: str | None = None) -> Deal:
+    """Stage-Wechsel: win_probability auf den Stage-Default zurueckgesetzt,
+    close_reason bei CLOSED_WON/CLOSED_LOST festgehalten (Befund 2.7 —
+    nicht nachholbares Realitaets-Signal)."""
+    from datetime import datetime, timezone
+
+    deal = get_deal(deal_id)
+    updated = deal.model_copy(update={
+        "stage": stage,
+        "win_probability": None,  # -> Validator leitet Stage-Default neu ab
+        "close_reason": close_reason if close_reason is not None else deal.close_reason,
+        "updated_at": datetime.now(timezone.utc),
+    })
+    updated = Deal.model_validate(updated.model_dump())  # Literal + win% pruefen/ableiten
+    with db.connect() as conn:
+        conn.execute(
+            """UPDATE deals SET stage=:stage, win_probability=:win_probability,
+               close_reason=:close_reason, updated_at=:updated_at WHERE id=:id""",
+            updated.model_dump(mode="json"),
+        )
+    return updated
 
 
 def get_deal(deal_id: str) -> Deal:

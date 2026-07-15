@@ -62,9 +62,14 @@ staerker), nicht das Potenzial, ihn zu drehen.
 - next_best_questions: maximal 5, priorisiert nach Informationswert, woertlich stellbar.
 - summary_for_manager: exakt 3 Saetze, forecast-tauglich, ehrlich (kein Happy-Ears).
 
-## Trend
+## Trend & Widersprueche zum Vorgaenger (bindende Ingestion-Entscheidung 2)
 Wenn ein voriger Snapshot mitgegeben ist: bestimme trend je Dimension durch Vergleich \
-(VERBESSERT/STABIL/VERSCHLECHTERT). Ohne vorigen Snapshot: ueberall ERSTBEWERTUNG."""
+(VERBESSERT/STABIL/VERSCHLECHTERT). Ohne vorigen Snapshot: ueberall ERSTBEWERTUNG.
+Widerspricht die neue Note dem vorigen Snapshot (z.B. Budget war zugesagt, jetzt \
+revidiert; Champion war Treiber, jetzt abgetaucht): setze die betroffene Dimension \
+auf ZU_PRUEFEN, benenne den Widerspruch explizit in findings UND spiele ihn als \
+eine der next_best_questions aus (woertlich stellbare Klaerungsfrage). Nie still \
+die neue oder die alte Aussage bevorzugen — Widerspruch ist ein Prueffall."""
 
 PROMPT_VERSION = hashlib.sha256(SYSTEM_PROMPT.encode("utf-8")).hexdigest()[:12]
 

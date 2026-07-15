@@ -36,7 +36,6 @@ _DIMENSION_ORDER = [
 ]
 
 _PLACEHOLDER_COMMANDS: list[tuple[str, str]] = [
-    ("ingest", "Text aufnehmen, klassifizieren, routen (Schicht 6)"),
     ("research", "Deep-Research zu einem Account (Modul M1)"),
     ("account-map", "Stakeholder-Map (Modul M2)"),
     ("briefing", "Pipeline-Briefing (Modul M3)"),
@@ -300,6 +299,82 @@ def cmd_correct(args: argparse.Namespace) -> int:
     return 0
 
 
+# ---------------------------------------------------------------- P6-Befehle
+
+def _interactive_ask(question: str, options: list[str]) -> int | None:
+    """CLI-Nachfrage; None bei Nicht-Interaktivitaet (EOF) oder ungueltiger Eingabe."""
+    print(f"\n{question}")
+    for i, option in enumerate(options, 1):
+        print(f"  [{i}] {option}")
+    try:
+        raw = input("Auswahl: ").strip()
+    except (EOFError, KeyboardInterrupt):
+        print()
+        return None
+    if raw.isdigit() and 1 <= int(raw) <= len(options):
+        return int(raw) - 1
+    return None
+
+
+def cmd_ingest(args: argparse.Namespace) -> int:
+    """ingest <datei.txt|-> [--deal <name>] — kompletter Ingestion-Durchlauf."""
+    import sys
+
+    from src.orchestrator.ingest import process_note
+
+    if args.file == "-":
+        text = sys.stdin.read()
+        source = "stdin"
+    else:
+        notes_path = Path(args.file)
+        if not notes_path.is_file():
+            log.error("Datei nicht gefunden: %s", notes_path)
+            return 1
+        text = notes_path.read_text(encoding="utf-8")
+        source = notes_path.name
+
+    try:
+        report = process_note(text, deal_name=args.deal, source=source, ask=_interactive_ask)
+    except (ValueError, LookupError) as e:
+        log.error("%s", e)
+        return 1
+
+    if report.aborted:
+        print(f"⏭  {report.aborted}")
+        return 0
+
+    print(f"━━━ Ingest: {source} ━━━")
+    print(f"Zuordnung: {report.deal_name} (Confidence {report.confidence:.2f}, {report.method or 'auto'})")
+    print(f"Typ: {report.activity_type} | Signale: {', '.join(report.signals) or '—'}")
+    print("Ausgefuehrt:")
+    for action in report.actions:
+        print(f"  • {action}")
+    if report.changes:
+        print("Veraendert (vs. Vorgaenger-Snapshot):")
+        for change in report.changes:
+            print(f"  Δ {change}")
+    return 0
+
+
+def cmd_set_stage(args: argparse.Namespace) -> int:
+    """set-stage <deal> <stage> [--reason] — Stage-Wechsel; Won/Lost-Grund festhalten (2.7)."""
+    from src.repository.deals import get_deal_by_name, update_deal_stage
+
+    try:
+        deal = get_deal_by_name(args.deal)
+    except LookupError as e:
+        log.error("%s", e)
+        return 1
+    if args.stage in ("CLOSED_WON", "CLOSED_LOST") and not args.reason:
+        log.error("Bei %s ist --reason Pflicht — das Warum ist nicht nachholbar (Befund 2.7).", args.stage)
+        return 1
+    updated = update_deal_stage(deal.id, args.stage, close_reason=args.reason)
+    print(f"{updated.name}: {deal.stage} → {updated.stage} (Win {updated.win_probability}%)")
+    if updated.close_reason and updated.stage in ("CLOSED_WON", "CLOSED_LOST"):
+        print(f"Grund festgehalten: {updated.close_reason}")
+    return 0
+
+
 # ---------------------------------------------------------------- Parser
 
 def build_parser() -> argparse.ArgumentParser:
@@ -313,6 +388,18 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("eval", help="Golden-Set: Ist vs. Soll qualitativ vergleichen")
     p.set_defaults(func=cmd_eval)
+
+    p = sub.add_parser("ingest", help="Text aufnehmen: klassifizieren, zuordnen, routen (P6)")
+    p.add_argument("file", help="Pfad zur Notes-Datei oder '-' fuer stdin")
+    p.add_argument("--deal", help="Deal-Name — uebersteuert die automatische Zuordnung")
+    p.set_defaults(func=cmd_ingest)
+
+    p = sub.add_parser("set-stage", help="Deal-Stage wechseln; bei CLOSED_* mit --reason (Won/Lost)")
+    p.add_argument("deal", help="Deal-Name")
+    p.add_argument("stage", choices=["PROSPECT", "DISCOVERY", "EVALUATION", "PROPOSAL",
+                                     "NEGOTIATION", "VERBAL", "CLOSED_WON", "CLOSED_LOST"])
+    p.add_argument("--reason", help="Warum gewonnen/verloren (Pflicht bei CLOSED_*)")
+    p.set_defaults(func=cmd_set_stage)
 
     p = sub.add_parser("add-account", help="Account anlegen")
     p.add_argument("--name", required=True)

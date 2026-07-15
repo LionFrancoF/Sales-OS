@@ -1,10 +1,10 @@
 # ARCHITECTURE.md — Sales OS
 
 Systemübersicht und Datenfluss. Wird bei jeder Schicht aktualisiert (DoD 5).
-Stand: **P5 (Persistenz)** — Domain (P1), Knowledge (P3), Analyzer (P4) und
-SQLite-Repository (P5) stehen. `analyze --deal` lädt den Vorgänger-Snapshot
-(Trend) und speichert append-only in die DB (einzige Wahrheit, Befund 4.4).
-Noch kein Orchestrator (P6), keine API (P7).
+Stand: **P6 (Orchestrator)** — der Kern-Datenfluss lebt: `ingest` klassifiziert
+(Haiku), löst den Deal auf (Schwelle 0.8, nachfragen statt raten), persistiert
+die Activity ZUERST (Beleg-Kette + Wiederaufsetzpunkt) und routet an den
+Analyzer/Kontakt-Updates. Noch keine API (P7).
 
 ## Prinzip
 KEIN autonomes Multi-Agenten-System. Ein **Orchestrator** ruft spezialisierte
@@ -12,7 +12,7 @@ KEIN autonomes Multi-Agenten-System. Ein **Orchestrator** ruft spezialisierte
 (Repository)** kooperieren. Deterministisch, testbar, günstig. Schichten von
 innen nach außen; Cross-Layer-Verstöße sind Bugs.
 
-## Datenfluss (Ziel-Architektur)
+## Datenfluss (P6: bis auf API real)
 
 ```
                  ┌──────────────┐        ┌──────────────┐
@@ -26,10 +26,10 @@ innen nach außen; Cross-Layer-Verstöße sind Bugs.
                         │   Orchestrator (P6)    │
                         │   src/orchestrator/    │
                         │                        │
-   Trigger  ──────────▶ │  1. Classifier  (Typ + Signale, Haiku)
- {NOTES|TIME|EVENT}     │  2. Resolver    (Deal/Kontakt-Zuordnung, Schwelle 0.8)
-   V1: nur NOTES        │  3. Dedup       (SHA-256 über Roh-Text)
-                        │  4. Router      (Signal -> Agent)
+   process_note() ────▶ │  1. Dedup       (SHA-256; Activity = Wiederaufsetzpunkt)
+ (bewusst kein Trigger- │  2. Classifier  (Typ + Signale + Extraktion, Haiku)
+  Envelope, Befund 1.5) │  3. Resolver    (Deal-Zuordnung 0.8, nachfragen statt raten)
+                        │  4. Router      (Signal -> Agent, regelbasiert)
                         └───────┬───────────────┘
                                 │  ruft je nach Signal
               ┌─────────────────┼──────────────────┐
@@ -66,9 +66,9 @@ innen nach außen; Cross-Layer-Verstöße sind Bugs.
 | Knowledge | `knowledge/` + `src/knowledge/` | P3 | ✓ Loader + Playbooks (Inhalte gitignored) |
 | Agenten | `src/agents/` | P4, M1–M4 | ✓ MEDDPICC-Analyzer (Opus 4.8, Structured Outputs, Caching, Circuit-Breaker) |
 | Repository | `src/repository/` | P5 | ✓ SQLite, append-only Snapshots/Activities/History, Entity-Resolution |
-| Orchestrator | `src/orchestrator/` | P6 | leer (P0) |
+| Orchestrator | `src/orchestrator/` | P6 | ✓ classifier/resolver/ingest (process_note, Wiederaufsetzpunkt) |
 | API | `src/api/` | P7 | leer (P0) |
-| CLI | `src/cli.py` | P0 | Gerüst (Platzhalter) |
+| CLI | `src/cli.py` | P0–P6 | ✓ analyze/eval/ingest/set-stage + Stammdaten (Platzhalter nur M1–M4) |
 
 ## Bewusste Abweichungen vom ursprünglichen Plan (P-1)
 - **Konfiguration:** typisiertes `src/config/settings.py` statt `config.yaml`

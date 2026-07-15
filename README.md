@@ -6,9 +6,9 @@ Account-Map, Pipeline-Briefing, Meeting-Prep) arbeiten über ein gemeinsames
 Datenmodell und einen Ingestion-Orchestrator zusammen — API-first, lokal,
 später kompatibel mit Fremdsoftware (eigene App, MCP, HubSpot, CSV).
 
-> **Status: P0 (Gerüst).** Nur Projektstruktur — noch keine Logik, keine
-> Modelle, keine Prompts. Die Schichten werden von innen nach außen gebaut
-> (siehe `CLAUDE.md` und `ARCHITECTURE.md`).
+> **Status: P6 (Orchestrator) fertig.** Kern-Datenfluss lebt: `ingest` →
+> Klassifizierung (Haiku) → Deal-Resolution → append-only Persistenz →
+> MEDDPICC-Analyse (Opus) mit Trend. Als Nächstes: P7 (API), dann M1–M4.
 
 ## Setup
 ```bash
@@ -39,9 +39,13 @@ python -m src.cli add-deal "Nordwind Logistics" --name "Ops-Analytics" --stage D
 python -m src.cli analyze tests/sample_notes/nordwind_01.txt --deal "Ops-Analytics"  # -> DB, append-only
 python -m src.cli show-deal "Ops-Analytics"     # Snapshot-Kurzfassung + Kontakte + Korrekturen
 python -m src.cli correct "Ops-Analytics" --field dimensions.champion.confidence --value ZU_PRUEFEN
+
+# Ingestion (P6): klassifizieren, zuordnen (Schwelle 0.8, sonst Nachfrage), routen
+python -m src.cli ingest tests/sample_notes/nordwind_02.txt        # auto-Resolution
+python -m src.cli set-stage "Ops-Analytics" CLOSED_LOST --reason "Budget gestrichen"
 ```
 
-Implementiert: `analyze`, `eval` (P4) und die Persistenz-Befehle (P5):
+Implementiert: P4 (`analyze`, `eval`), P5 (Persistenz-Befehle), P6 (`ingest`, `set-stage`):
 
 | Befehl | Zweck | Schicht |
 |---|---|---|
@@ -50,7 +54,8 @@ Implementiert: `analyze`, `eval` (P4) und die Persistenz-Befehle (P5):
 | `add-account` / `add-deal` / `add-contact` ✓ | Stammdaten anlegen (Kontakt mit Dubletten-Schutz) | P5 |
 | `list-deals` / `show-deal` ✓ | Deals ansehen (Snapshot, Kontakte, Korrekturen) | P5 |
 | `correct` ✓ | Korrektur zum letzten Snapshot speichern (Feedback wird gesammelt; Injektion nach M4) | P5 |
-| `ingest` | Text aufnehmen, klassifizieren, routen | P6 |
+| `ingest` ✓ | Text aufnehmen: klassifizieren, Deal auflösen (nachfragen statt raten), routen | P6 |
+| `set-stage` ✓ | Stage wechseln; bei CLOSED_* mit `--reason` (Won/Lost, Befund 2.7) | P6 |
 | `research` | Deep-Research zu einem Account | M1 |
 | `account-map` | Stakeholder-Map | M2 |
 | `briefing` | Pipeline-Briefing | M3 |
@@ -94,7 +99,7 @@ src/domain/         Pydantic-Modelle (P1) ✓
 knowledge/          Playbooks + Loader (P3) ✓
 src/agents/         Einzweck-Agenten (P4 ✓, M1–M4)
 src/repository/     einziger DB-Zugang (P5) ✓
-src/orchestrator/   Ingestion/Routing (P6)
+src/orchestrator/   Ingestion/Routing (P6) ✓
 src/api/            FastAPI (P7)
 src/cli.py          Einstiegspunkt
 src/config/         settings.py (Konstanten)

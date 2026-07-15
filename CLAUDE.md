@@ -127,6 +127,20 @@ Was, Entscheidung, Warum). Volle Begründung: ARCHITECTURE_REVIEW.md.
   Daten schützenswert sind. Dokumentiert in settings.py.
 - **[P5 / LlmCall-Tabelle]** → nicht gebaut (folgt aus 1.1, bereits in
   Tech-Stack dokumentiert: eine Log-Zeile, keine DB-Cost-Tabelle in V1).
+- **[P-1 / 1.5] Trigger-Generizität + PLANNING-Tür** → ÜBERNOMMEN (gestrichen).
+  `process_note()` direkt statt Trigger-Envelope {NOTES|TIME|EXTERNAL_EVENT}.
+  Warum: Speculative Generality — der Umbau von 1 auf 2 reale Trigger ist später
+  billig und informiert; die inneren Bausteine (classifier/resolver/router)
+  bleiben wiederverwendbar. Architektur-Absatz entsprechend angepasst.
+- **[P-1 / 2.4 + 2.6] Transaktionsgrenze & Re-Analyse-Dedup** → EIN Mechanismus:
+  die Activity ist der Wiederaufsetzpunkt. Hash existiert + Snapshot referenziert
+  die Activity → "bereits verarbeitet", Abbruch. Hash existiert ohne Snapshot
+  (Crash) → Fortsetzung mit bestehender Activity. Je Activity max. EIN Snapshot
+  (kein Trend-Rauschen). Warum: selbstheilend ohne Transaktions-Maschinerie.
+- **[P-1 / 2.7] Won/Lost-Minimalerfassung** → ÜBERNOMMEN. `close_reason`-Feld
+  am Deal + `set-stage`-Befehl (--reason Pflicht bei CLOSED_*). Warum: das Warum
+  eines geschlossenen Deals ist das einzige nicht nachholbare Realitäts-Signal;
+  das Auswertungs-Modul bleibt Backlog.
 
 Weitere P-1-Befunde (Capture-first, Eval-n=3, Snapshot-als-Kontextgrenze,
 Event-Log-Tabelle, Trigger-Generizität, Dual-Framework, Re-Analyse-Dedup,
@@ -143,15 +157,12 @@ Ingestion läuft vorerst SYNCHRON (mehrere LLM-Calls pro Aufruf) — perfekt
 für die CLI. Für eine spätere responsive App: Background-Jobs (Backlog),
 daher keine Businesslogik auf synchrone Ausführung fest verdrahten.
 
-Der Orchestrator verarbeitet generische TRIGGER, nicht nur Notes: ein
-Trigger hat {type: NOTES | TIME | EXTERNAL_EVENT, payload}. V1 implementiert
-nur NOTES, aber Signatur & Routing sind trigger-generisch, damit Signal-
-Monitoring und Stale-Alerts (Backlog) ohne Umbau andocken. Der Router ist
-regelbasiert (Signal → Agent); die Struktur muss erlauben, später einen
-PLANNING-Modus daneben zu setzen (LLM plant Agent-Abfolge für neuartige
-Aufgaben), ohne den regelbasierten Pfad zu ändern.
-> Anmerkung P-1 (Befund 1.5): Trigger-Generizität + PLANNING-Tür sind als
-> spekulativ markiert. Entscheidung übernehmen/ablehnen erfolgt bei P6.
+Der Orchestrator hat EINEN realen Eingang: `process_note(text)` — bewusst
+KEIN generischer Trigger-Envelope und keine PLANNING-Tür (Befund 1.5,
+entschieden bei P6). Die inneren Bausteine (classifier, resolver, Routing-
+Schritte) sind getrennt und wiederverwendbar; kommt später ein zweiter
+realer Trigger (Signal-Monitoring, Stale-Alerts), wird dann informiert
+generalisiert. Der Router ist regelbasiert (Signal → Agent).
 
 Schichten von innen nach außen. Verstöße gegen diese Regeln sind Bugs:
 1. `src/domain/` — Pydantic-Modelle. Null Logik, null Imports aus anderen Schichten.
@@ -346,3 +357,23 @@ Knowledge-Critic (Agent, der Lions Playbooks auf Widersprüche/Lücken gegenlies
   Dimensionen, Score 22→34, 2 append-only Snapshots). 76 pytest grün.
   Offen für P6: Transaktionsgrenze (2.4), Re-Analyse-Dedup (2.6),
   Won/Lost-Minimalerfassung (2.7).
+- **2026-07-15 — P6 (Orchestrator/Ingestion, Herzstück):** `src/orchestrator/`
+  mit classifier.py (EIN Haiku-Call: Typ + 6 Signale + konservative Kontakt-
+  Extraktion, Befund 4.6), resolver.py (regelbasiert, Schwelle 0.8, nachfragen
+  statt raten, --deal übersteuert), ingest.py (process_note: Dedup →
+  Klassifizieren → Auflösen → Activity ZUERST → Routen). LLM-Helfer nach
+  src/agents/llm.py extrahiert (2. Konsument). Entscheidungen (Lion): kein
+  Trigger-Envelope (1.5 gestrichen); Activity als Wiederaufsetzpunkt löst
+  2.4+2.6 in einem (max. 1 Snapshot je Activity); Won/Lost minimal (2.7:
+  close_reason + set-stage, --reason Pflicht bei CLOSED_*); kein Event-Log
+  (1.2, Log-Zeilen + IngestReport stattdessen). Analyzer: Widerspruchs-Regel
+  (Ingestion-Entscheidung 2) im System-Prompt → neue prompt_version;
+  source_activity_ids verdrahtet (Beleg-Kette geschlossen). CLI: ingest
+  <datei|-> [--deal], set-stage. DoD live: nordwind_01-04 chronologisch
+  ingestiert (Notes 2-4 auto-resolved 0.80), Kontakte erkannt (Markus/Sabine/
+  Tobias/Kai/Dr. Kessler als EB), Alignment-Updates mit Historie, Widerspruch
+  Note 4 (Budget revidiert) → metrics ZU_PRUEFEN/VERSCHLECHTERT + Klärungsfrage
+  in next_best_questions, Score-Verlauf 18→33→31→16, Momentum POSITIV→NEGATIV,
+  Dedup-Wiederholung bricht sauber ab. 91 pytest grün. Offen: Lions
+  Eval-Iterationsphase (P4); Vorname-only-Erwähnungen landen im Nachfrage-Band
+  (konservativ übersprungen bei non-interactive — beobachten).

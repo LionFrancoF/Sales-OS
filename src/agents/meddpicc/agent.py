@@ -1,24 +1,21 @@
 """MEDDPICC-Analyzer: analyze(notes) -> MeddpiccSnapshot.
 
-- Modell aus settings (MODEL_ANALYZE, nie hartcodiert), Structured Outputs
-  via client.messages.parse() -> schema-valides JSON garantiert; 1 Retry mit
+- Modell aus settings (MODEL_ANALYZE, nie hartcodiert), Structured Outputs +
+  Circuit-Breaker + Kosten-Logzeile via src/agents/llm.py; 1 Retry mit
   Fehlermeldung als Sicherheitsnetz (CLAUDE.md Schicht-Regel).
 - Prompt-Caching: [System][Knowledge] als stabiler Prefix mit cache_control,
   Variables in der User-Message (P-1 Befund 3.5).
-- Cost-Circuit-Breaker (P-1 Befund 2.8) + eine Kosten-Logzeile pro Call
-  (keine Cost-Tabelle in V1, Befund 1.1).
-- Hinweis: Opus 4.8 akzeptiert KEIN temperature (API-Vorgabe); adaptive
-  thinking ist explizit aktiviert (qualitaetskritische Analyse).
+- Kontextgrenze (Befund 2.2/4.1): der Analyzer bekommt NIE die Roh-Historie,
+  sondern [letzter Snapshot] + [neue Note] — konstante Kosten je Ingest.
+- Hinweis: Opus 4.8 akzeptiert KEIN temperature (API); adaptive thinking aktiv.
 """
 from __future__ import annotations
 
-import json
 import logging
-import time
 
-from dotenv import load_dotenv
 from pydantic import ValidationError
 
+from src.agents import llm
 from src.agents.meddpicc.prompts import (
     KNOWLEDGE_HEADER,
     PROMPT_VERSION,
@@ -37,72 +34,17 @@ log = logging.getLogger("sales_os.agents.meddpicc")
 AGENT_NAME = "meddpicc_analyzer"
 _MAX_TOKENS = 16_000  # non-streaming Empfehlung; JSON-Snapshot + adaptives Thinking passen locker
 
-# Circuit-Breaker-Zaehler, gelten pro CLI-Aufruf (Prozess).
-_calls_this_command = 0
-_tokens_this_command = 0
-
-
-def _check_circuit_breaker() -> None:
-    """Harter Anschlag gegen Kosten-Runaway (P-1 Befund 2.8)."""
-    if _calls_this_command >= settings.MAX_LLM_CALLS_PER_COMMAND:
-        raise RuntimeError(
-            f"Cost-Circuit-Breaker: {_calls_this_command} LLM-Calls in diesem Aufruf "
-            f"(Deckel {settings.MAX_LLM_CALLS_PER_COMMAND}, settings.py). Abbruch."
-        )
-    if _tokens_this_command >= settings.MAX_LLM_TOKENS_PER_COMMAND:
-        raise RuntimeError(
-            f"Cost-Circuit-Breaker: {_tokens_this_command:,} Tokens in diesem Aufruf "
-            f"(Deckel {settings.MAX_LLM_TOKENS_PER_COMMAND:,}, settings.py). Abbruch."
-        )
-
-
-def _log_call(model: str, usage, latency_s: float) -> None:
-    """Eine Log-Zeile pro Call: model, tokens, grober Cent-Betrag, Latenz."""
-    global _calls_this_command, _tokens_this_command
-    inp = getattr(usage, "input_tokens", 0) or 0
-    out = getattr(usage, "output_tokens", 0) or 0
-    cw = getattr(usage, "cache_creation_input_tokens", 0) or 0
-    cr = getattr(usage, "cache_read_input_tokens", 0) or 0
-    prices = settings.MODEL_PRICES_USD_PER_MTOK.get(model, {})
-    cost_usd = (
-        inp * prices.get("input", 0)
-        + out * prices.get("output", 0)
-        + cw * prices.get("cache_write", 0)
-        + cr * prices.get("cache_read", 0)
-    ) / 1_000_000
-    _calls_this_command += 1
-    _tokens_this_command += inp + out + cw + cr
-    log.info(
-        "llm-call model=%s in=%d out=%d cache_write=%d cache_read=%d ~%.1f ct latency=%.1fs",
-        model, inp, out, cw, cr, cost_usd * 100, latency_s,
-    )
-
-
-def _client():
-    """Anthropic-Client, lazy (Import-Zeit ohne Key soll nicht knallen)."""
-    import anthropic
-
-    load_dotenv()  # ANTHROPIC_API_KEY aus .env
-    return anthropic.Anthropic()
-
 
 def _call_llm(system_blocks: list[dict], user_message: str) -> AnalysisResult:
-    """Ein API-Call mit Structured Output. Wirft ValidationError/ValueError bei invalidem Output."""
-    _check_circuit_breaker()
-    client = _client()
-    t0 = time.perf_counter()
-    response = client.messages.parse(
+    """Ein Analyzer-Call (separat, damit Tests genau hier mocken koennen)."""
+    return llm.call_structured(
         model=settings.MODEL_ANALYZE,
+        system=system_blocks,
+        user=user_message,
+        output_format=AnalysisResult,
         max_tokens=_MAX_TOKENS,
         thinking={"type": "adaptive"},
-        system=system_blocks,
-        messages=[{"role": "user", "content": user_message}],
-        output_format=AnalysisResult,
     )
-    _log_call(settings.MODEL_ANALYZE, response.usage, time.perf_counter() - t0)
-    if response.parsed_output is None:
-        raise ValueError(f"Kein parsebarer Output (stop_reason={response.stop_reason}).")
-    return response.parsed_output
 
 
 def _build_system_blocks(knowledge_block: str) -> list[dict]:
@@ -121,6 +63,7 @@ def _to_snapshot(
     result: AnalysisResult,
     deal: Deal | None,
     previous_snapshot: MeddpiccSnapshot | None,
+    source_activity_ids: list[str],
 ) -> MeddpiccSnapshot:
     """Mappt den LLM-Vertrag in den Domain-Snapshot; Code setzt Verwaltungsfelder."""
     dims: dict[str, DimensionAssessment] = {}
@@ -130,6 +73,7 @@ def _to_snapshot(
         dims[key] = DimensionAssessment(**llm_dim)
     return MeddpiccSnapshot(
         deal_id=deal.id if deal else "unassigned",
+        source_activity_ids=source_activity_ids,
         framework="MEDDPICC",
         framework_rationale="V1: MEDDPICC erzwungen, Auto-Wahl bewusst gestrichen (P-1 Befund 1.6).",
         dimensions=dims,
@@ -148,6 +92,7 @@ def analyze(
     previous_snapshot: MeddpiccSnapshot | None = None,
     deal: Deal | None = None,
     corrections_block: str = "",
+    source_activity_ids: list[str] | None = None,
 ) -> MeddpiccSnapshot:
     """Analysiert Call-Notes zu einem MeddpiccSnapshot (append-only, versioniert).
 
@@ -177,4 +122,4 @@ def analyze(
         retry_message = user_message + RETRY_SUFFIX.format(error=first_error)
         result = _call_llm(system_blocks, retry_message)  # 2. Fehler propagiert
 
-    return _to_snapshot(result, deal, previous_snapshot)
+    return _to_snapshot(result, deal, previous_snapshot, source_activity_ids or [])

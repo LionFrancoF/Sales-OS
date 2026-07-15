@@ -41,6 +41,10 @@ class Deal(BaseModel):
     framework_override: Framework | None = Field(
         default=None, description="Erzwingt ein Framework (MEDDICC/MEDDPICC); hat Vorrang vor der Analyzer-Wahl."
     )
+    close_reason: str | None = Field(
+        default=None,
+        description="Warum gewonnen/verloren (bei CLOSED_WON/CLOSED_LOST) — nicht nachholbares Realitaets-Signal (P-1 Befund 2.7).",
+    )
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), description="Erstellzeitpunkt (UTC).")
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), description="Letzte Aenderung (UTC).")
 

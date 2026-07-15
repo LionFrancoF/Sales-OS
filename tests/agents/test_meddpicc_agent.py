@@ -37,8 +37,10 @@ def _result(momentum: str = "NEUTRAL", score: int = 40) -> AnalysisResult:
 
 @pytest.fixture(autouse=True)
 def _reset_breaker():
-    agent_mod._calls_this_command = 0
-    agent_mod._tokens_this_command = 0
+    from src.agents import llm
+
+    llm._calls_this_command = 0
+    llm._tokens_this_command = 0
 
 
 @pytest.fixture()
@@ -125,10 +127,11 @@ def test_second_failure_propagates(monkeypatch):
 
 
 def test_circuit_breaker_stops_runaway(monkeypatch):
-    agent_mod._calls_this_command = agent_mod.__getattribute__("_calls_this_command")
-    monkeypatch.setattr(agent_mod, "_calls_this_command", 999)
+    from src.agents import llm
+
+    monkeypatch.setattr(llm, "_calls_this_command", 999)
     with pytest.raises(RuntimeError, match="Circuit-Breaker"):
-        agent_mod._check_circuit_breaker()
+        llm._check_circuit_breaker()
 
 
 def test_empty_notes_rejected():
