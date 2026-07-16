@@ -1,0 +1,21 @@
+Call Voltara - 19.05.2026 - Use-Case-Workshop (vor ort, essen)
+Teilnehmer: Dr. Brandt + 4 aus seinem team (meldewesen/netzwirtschaft), ich + SE
+
+- halbtages-workshop, gute energie, brandts team hat richtig mitgearbeitet
+- metrics konkreter: 4 FTE beschaeftigen sich fast nur mit meldewesen, dazu externe beratung
+  jedes quartal (~30-40k/jahr laut brandt). ziel von brandt: "haelfte der manuellen arbeit weg"
+- prozess-landkarte gebaut: 7 quellsysteme, davon SAP IS-U das wichtigste
+- entscheidungskriterien (brandts team, noch nicht offiziell): ISO 27001, hosting in DE zwingend,
+  lueckenloser audit-trail, integration SAP IS-U, "kein amerikanischer hyperscaler bitte"
+- security: diehms team (CIO office) macht nen formalen review-prozess, dauert "6-8 wochen wenns
+  gut laeuft", brandt stoesst das an
+- ENTSCHEIDEND: brandt hat noch im workshop nen termin mit CFO riegler fuer juni eingestielt,
+  "die muss das sehen bevor der sommer kommt" -> termin steht, 16.06.
+- wettbewerb: "wir schauen uns parallel noch was von PowerGrid Analytics an, eher pflichtuebung,
+  der einkauf will vergleiche sehen"
+- next: CFO termin 16.06., vorher security-fragebogen von diehm ausfuellen
+
+[intern: brandt liefert. termin mit CFO selbst organisiert, das ist mehr als reden.
+ powergrid nicht unterschaetzen auch wenn brandt abwinkt.]
+
+TODO: security fragebogen team geben, business case draft fuer riegler bauen

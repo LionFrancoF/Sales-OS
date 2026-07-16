@@ -1,0 +1,18 @@
+Call Hanseatik Retail Group - 12.05.2026 - Erstgespraech
+Teilnehmer: Frauke Petersen (Leitung Business Intelligence), ich
+
+- kam ueber empfehlung von nem ex-kollegen von frauke rein, warmer intro
+- Hanseatik = omnichannel einzelhandel, ~140 filialen DE + onlineshop, ca 8000 MA, HQ hamburg
+- problem: datensilos. filialen, e-com und einkauf haben jeweils eigene reports, "drei wahrheiten fuer dieselbe zahl"
+- abverkaufs-/aktionsauswertung dauert 10-14 tage (!), bis dahin laeuft die naechste aktion schon
+- frauke: "wir steuern werbeaktionen im blindflug, korrektur kommt immer zu spaet"
+- ihr team (5 leute BI) klebt excel + power queries zusammen, "haelt mit tesa"
+- wer entscheidet sowas? "geht bei uns ueber Bettina Clasen, unsere COO. aber erstmal muss IT mitspielen"
+- IT = Jan Okonkwo (Head of IT), soll bei ner demo dabei sein, frauke organisiert
+- budget: nicht gefragt, zu frueh
+- frauke wirkt strukturiert, kennt ihre zahlen, will das thema echt loesen
+- naechster schritt: demo mit jan + BI team, frauke schickt terminvorschlaege
+
+[intern: ordentlicher einstieg, frauke koennte die richtige sein um das zu treiben. COO clasen im hinterkopf behalten.]
+
+TODO: demo vorbereiten, retail usecases raussuchen

@@ -1,6 +1,6 @@
-# Sample Notes — synthetische Testdaten (P2)
+# Sample Notes — synthetische Testdaten (P2 + Golden-Set-Ausbau)
 
-Drei fiktive Enterprise-B2B-Accounts, je ein Deal, je 4–5 chronologische Call-Notes
+Sechs fiktive Enterprise-B2B-Accounts, je ein Deal, je 3–5 chronologische Call-Notes
 als eigene `.txt`. Verkauftes Produkt durchgehend: **"Vela"** (AI-native Daten-/
 Automations-Plattform). Die Notes sind **absichtlich messy** (Stichpunkte, Denglisch,
 Abkürzungen, Tippfehler, Smalltalk, interne Randnotizen in `[intern: …]`).
@@ -9,7 +9,7 @@ Abkürzungen, Tippfehler, Smalltalk, interne Randnotizen in `[intern: …]`).
 sie sollen aus dem Verhalten *ableitbar* sein. Diese Übersicht beschreibt nur die
 **Szenario-Anlage** (Reifegrad + eingebaute Dynamik), keine MEDDPICC-Bewertung.
 
-## Die drei Verläufe
+## Die Verläufe
 
 ### A — Nordwind Logistics (Logistik/Kontraktlogistik) · `nordwind_01…04`
 Frühe **Discovery mit vielen Lücken**. Kontakt über einen enthusiastischen Ops-Leiter,
@@ -36,8 +36,38 @@ IT-Chef ist reserviert und favorisiert den Wettbewerber **"Fluxion"**.
 sagt in Call 2/3 "voll an Bord, Q3 live", ist aber in Call 5 **seit ~3 Wochen abgetaucht**
 (Rolle nach Umstrukturierung unklar). EB (CFO) engagiert, aber abwartend. Single-threading-Risiko.
 
+### D — Hanseatik Retail Group (Omnichannel-Einzelhandel) · `hanseatik_01…03` *(Golden-Set-Ausbau, Momentum-Stressfall)*
+**Solide Mid-Stage-Discovery, die zuletzt auf der Stelle tritt.** Strukturierte
+BI-Leiterin treibt (Frauke Petersen), IT (Jan Okonkwo) kritisch-konstruktiv, klarer Pain
+(Aktionsauswertung 10–14 Tage, Flop-Aktionen 80–120k Marge). **Eingebaute Dynamik:** Die
+letzte Note ist positiv im Ton und bringt neue Anekdoten — aber der COO-Termin (Bettina
+Clasen) bleibt angekündigt statt erfolgt, kein neuer Termin fixiert, keine Dimension
+bewegt sich. Anlage: *Veränderung der Beleglage = keine.*
+
+### E — Voltara Energie AG (Energieversorger, reguliert) · `voltara_01…04` *(Golden-Set-Ausbau, Momentum-Stressfall)*
+**Später Mid-Stage mit Doppelereignis in der letzten Note.** Starker Treiber
+(Dr. Brandt, Leiter Netzwirtschaft), CFO (Riegler) direkt gesprochen mit bedingter
+mündlicher Zusage (Security-Freigabe + Business Case → Beschaffung Q3), formaler
+Security-Review (CIO-Office Diehm), Wettbewerber PowerGrid als Pflichtübung.
+**Eingebauter Konflikt:** In `voltara_04` fallen ZWEI harte Ereignisse in dieselbe Note —
+die schriftliche Security-Freigabe (Bedingung des EB erfüllt) UND die Kündigung des
+Treibers (weg zum 01.09., Nachfolge offen). Anlage: *harte Belege in beide Richtungen
+gleichzeitig.*
+
+### F — Papyrus Verlagsgruppe (Medien/Verlag) · `papyrus_01…03` *(Golden-Set-Ausbau, Momentum-Stressfall)*
+**Frühe Stage, maximale Begeisterung, null Substanz.** Enthusiastischer Digital
+Director (Leon Bachmann), Team applaudiert in der Demo, GF (Sartorius) nur vom
+Hörensagen („fand die Idee im Flur auch spannend"). **Eingebaute Falle:** Die letzte
+Note ist die euphorischste — und enthält keine einzige Buyer-Aktion, keine Zahl, kein
+Dokument, keinen Termin, keinen zweiten Stakeholder. Anlage: *Tonalität vs. Beleglage.*
+
 ## Dateien
-- Notes: `nordwind_01…04.txt`, `aurelia_01…05.txt`, `meridian_01…05.txt` (14 Dateien).
-- Golden-Set-Vorlagen (leer, von Hand auszufüllen) in `tests/golden_set/`:
+- Notes: `nordwind_01…04.txt`, `aurelia_01…05.txt`, `meridian_01…05.txt`,
+  `hanseatik_01…03.txt`, `voltara_01…04.txt`, `papyrus_01…03.txt` (24 Dateien).
+- Golden-Set-Referenzen (ausgefüllt) in `tests/golden_set/`:
   `nordwind_04.expected.md`, `aurelia_05.expected.md`, `meridian_05.expected.md`
   (je die letzte, informationsreichste Note pro Account; Framework MEDDPICC erzwungen).
+- Golden-Set-Vorlagen (leer, von Hand auszufüllen) in `tests/golden_set/drafts/`:
+  `hanseatik_03.expected.md`, `voltara_04.expected.md`, `papyrus_03.expected.md` —
+  **nach dem Ausfüllen nach `tests/golden_set/` verschieben** (unausgefüllte Dateien
+  würden dort pytest/eval brechen, deshalb der Unterordner).

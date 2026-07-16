@@ -1,0 +1,22 @@
+Call Voltara - 16.06.2026 - Termin mit CFO Riegler
+Teilnehmer: Anette Riegler (CFO), Dr. Brandt, Carola Diehm (CIO-Office, dazugeschaltet), ich
+
+- riegler direkt gesprochen, 45 min, gut vorbereitet (brandt hatte ihr unseren case-draft gegeben)
+- sie kennt das meldewesen-problem, "der beinahe-vorfall letztes jahr ist bei mir gelandet,
+  sowas will ich nicht nochmal erklaeren muessen" -> pain auch bei ihr angekommen
+- ihre bedingungen, wortlaut ungefaehr: "wenn die security-freigabe von frau diehms team da ist
+  und der business case sauber steht, gehen wir im Q3 in die beschaffung"
+  -> muendlich, an bedingungen geknuepft, aber immerhin von ihr selbst
+- business case: sie will die 4 FTE + beraterkosten gegen lizenz+einfuehrung gerechnet sehen,
+  payback < 24 monate ist ihre hausnummer
+- diehm: security-review laeuft, "wir sind mittendrin, ein paar punkte offen (verschluesselung
+  at rest, subprozessoren), report kommt richtung mitte juli"
+- beschaffung: es gibt nen formalen einkaufsprozess (ausschreibungspflicht ab bestimmter summe?
+  muss ich klaeren), riegler: "das klaert der einkauf dann"
+- powergrid: riegler erwaehnt sie einmal ("die alternative die sich das team ansieht"), kein favorit erkennbar
+- next: security-report abwarten (mitte juli), business case finalisieren, brandt haelt den draht
+
+[intern: bester call bisher. CFO hat selbst bedingungen genannt = sie denkt schon in beschaffung.
+ aber: alles haengt an security-freigabe + case. und brandt ist unser einziger echter draht.]
+
+TODO: business case mit brandts FTE zahlen scharf rechnen

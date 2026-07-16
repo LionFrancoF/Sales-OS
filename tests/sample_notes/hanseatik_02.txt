@@ -1,0 +1,21 @@
+Call Hanseatik - 04.06.2026 - Demo + Deep Dive
+Teilnehmer: Frauke Petersen, Jan Okonkwo (Head of IT), Melis + Torben (BI team), ich
+
+- demo lief gut, vela live an retail-beispieldaten gezeigt
+- jan kritisch aber fair: fragen zu API, datenmodell, "geht das auch on-prem oder zumindest EU cloud?"
+  -> kein blocker-vibe, eher gruendlich. will technisch nix ueberstuerzen
+- frauke liefert zahlenmaterial: "jede aktion die floppt kostet uns im schnitt 80-120k marge,
+  und wir erfahren es erst 2 wochen spaeter" (ihre schaetzung, sagt sie selbst)
+- ~25-30 grosse aktionen pro jahr, "3-4 flops davon sind vermeidbar wenn wir schneller sehen"
+- kriterien die fielen: integration warenwirtschaft (SAP), datenschutz/DSGVO, schulungsaufwand fuers filialpersonal
+  -> nicht formal, aber jan + frauke waren sich da einig
+- budget: frauke: "wir haben n topf fuer digitalisierung dieses jahr, muesste eigentlich reichen" - keine zahl
+- Bettina Clasen (COO) war NICHT dabei. frauke: "ich bring das bei bettina auf die agenda, die sommer-
+  planungsrunde waere der richtige moment"
+- decision process sonst unklar, "einkauf kommt irgendwann dazu wenns konkret wird"
+- wettbewerb: nicht erwaehnt, hab nicht gefragt (fehler, nachholen)
+- next: frauke meldet sich nach dem gespraech mit clasen
+
+[intern: gutes gespraech, jan ist keine bremse, frauke treibt. der weg zur COO ist der knackpunkt.]
+
+TODO: SAP-connector doku an jan schicken

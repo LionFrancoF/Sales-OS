@@ -1,0 +1,18 @@
+Call Voltara Energie AG - 21.04.2026 - Erstgespraech (nach E-world Messe)
+Teilnehmer: Dr. Stefan Brandt (Leiter Netzwirtschaft), ich
+
+- kennengelernt am messestand e-world, brandt kam aktiv auf uns zu
+- Voltara = regionaler energieversorger + netzbetreiber, ~5000 MA, strom/gas, stark reguliert
+- sein problem: regulatorik-meldewesen (BNetzA meldungen, netzentgelte etc) laeuft manuell,
+  excel + access (!!), "jedes quartal zittern wir ob die zahlen stimmen"
+- letztes jahr "fast ne strafe kassiert" wegen fehlerhafter meldung, wurde grad noch korrigiert
+  -> das thema hat intern narben hinterlassen, brandt spuerbar unter druck
+- er will: automatisierte datenstrecken von den quellsystemen bis zur meldung, audit-trail
+- IT: "da muesst ihr durch die security, das macht das CIO-office, Carola Diehm. ohne die geht nix"
+- budget/entscheidung: "das budget kommt aus dem bereich von Anette Riegler, unserer CFO"
+- brandt selbst wirkt wie der macher-typ, will das dieses jahr noch anschieben
+- next: use-case workshop mit seinem team, er organisiert
+
+[intern: regulierter laden, aber echter schmerz mit konsequenzen. brandt koennte das ziehen.]
+
+TODO: referenzen aus energie/utilities raussuchen fuer workshop
