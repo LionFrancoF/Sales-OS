@@ -61,8 +61,12 @@ def parse_expected(path: Path) -> ExpectedAnalysis:
             if digits:
                 expected.overall_score = int(digits.group(1))
         elif stripped.startswith("- Momentum"):
-            value = stripped.rsplit(":", 1)[-1].strip().upper()
-            # nur das reine Momentum-Wort werten (Zusatztext ignorieren)
+            # Wert steht nach dem Label-Doppelpunkt; Zusatztext (auch mit weiteren
+            # Doppelpunkten, z.B. Begruendungen) darf das Parsing nicht kippen.
+            _, _, value = stripped.partition("):")
+            if not value:
+                value = stripped.rsplit(":", 1)[-1]
+            value = value.strip().upper()
             for m in _MOMENTA:
                 if value.startswith(m):
                     expected.momentum = m

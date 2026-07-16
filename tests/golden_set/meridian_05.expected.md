@@ -82,7 +82,7 @@
 ## Gesamt
 - Overall score (0–100): 40
 - Score rationale: Mid-stage, aber im Wettbewerb hinten: EB erreicht (GESICHERT) und Kriterien bekannt, doch Champion abgetaucht (ZU_PRUEFEN), Wettbewerber Fluxion GESICHERT und operativ voraus, Metrics/ROI + Prozess/Paper unklar. 40 = besser qualifiziert als ein reines Discovery-Deal (EB + Kriterien vorhanden), aber die klare, gewinnende Konkurrenz + der fehlende Champion drücken es ins untere Mittelfeld.
-- Momentum (POSITIV / NEUTRAL / NEGATIV): NEUTRAL
+- Momentum (POSITIV / NEUTRAL / NEGATIV): NEGATIV — korrigiert 16.07.2026 (Lion). Harte Gegenbelege im letzten Fenster nach Lions Definition; Champion Julia seit ~3 Wochen abgetaucht/Rollenverlust ("Champion verliert Position" = Playbook-Kriterium), Fluxion-POC bereits gestartet, 200k-Budget nie bestätigt und jetzt völlig offen. Das ursprüngliche NEUTRAL-Label entstand VOR der bindenden Momentum-Definition.
 - Deal risks:
   1. Champion abgetaucht — Julia ~3 Wochen weg, Rolle unklar; Deal war single-threaded auf sie; Nina machtlos.
   2. Wettbewerber operativ voraus — Fluxion POC gestartet, interner Fürsprecher (Grothe), Preisvorteil.

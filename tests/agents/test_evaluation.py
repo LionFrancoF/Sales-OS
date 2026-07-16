@@ -41,7 +41,7 @@ def test_parse_expected_fixture(tmp_path: Path):
 
 
 def test_parse_real_golden_files_complete():
-    """Die 3 echten Golden-Set-Dateien muessen vollstaendig parsebar sein (8 Dimensionen, Score, Momentum)."""
+    """Alle echten Golden-Set-Dateien muessen vollstaendig parsebar sein (8 Dimensionen, Score, Momentum)."""
     for path in sorted(GOLDEN_DIR.glob("*.expected.md")):
         exp = parse_expected(path)
         assert len(exp.confidences) == 8, f"{path.name}: nur {len(exp.confidences)} Confidences geparst"
@@ -51,12 +51,12 @@ def test_parse_real_golden_files_complete():
 
 def test_find_golden_cases_maps_notes():
     cases = find_golden_cases(GOLDEN_DIR, NOTES_DIR)
-    assert len(cases) == 3
+    assert len(cases) == 6
     accounts = sorted(exp.account for exp, _ in cases)
-    assert accounts == ["aurelia", "meridian", "nordwind"]
+    assert accounts == ["aurelia", "hanseatik", "meridian", "nordwind", "papyrus", "voltara"]
     for exp, notes in cases:
         assert all(exp.account in p.name for p in notes)
-        assert len(notes) >= 4
+        assert len(notes) >= 3
 
 
 def test_concat_notes_chronological(tmp_path: Path):

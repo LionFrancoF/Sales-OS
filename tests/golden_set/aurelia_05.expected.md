@@ -82,7 +82,7 @@
 ## Gesamt
 - Overall score (0–100): 55
 - Score rationale: Prozessual weit (Paper Process GESICHERT, EB-Zusage mündlich, technische Kriterien erfüllt), aber Qualifizierung fragil — kein bestätigter Champion (ZU_PRUEFEN), sechs Dimensionen nur WAHRSCHEINLICH, nur eine GESICHERT, Budget umkämpft. 55 = leicht über Mitte (Procurement fast durch, EB mündlich zugesagt), aber klar unter "stark", weil der Fortschritt teils auf einer abgezogenen Championin ruht.
-- Momentum (POSITIV / NEUTRAL / NEGATIV): NEUTRAL
+- Momentum (POSITIV / NEUTRAL / NEGATIV): POSITIV — korrigiert 16.07.2026 (Lion). Harte Belege im letzten Fenster (Call 5) nach Lions Definition; erster direkter EB-Kontakt mit mündlichem Commitment, Paper Process mit Tier-Bewegung (DPA unterschriftsreif, nur noch eine SLA-Klausel), Preis nahezu final. Der Champion-Bruch (Katharina) lag im VORHERIGEN Fenster (Call 4) — Lions Konfliktregel (beide Richtungen hart im SELBEN Fenster → NEUTRAL) greift hier nicht; das Niveau-Risiko Champion deckelt den Score, nicht das Momentum. Das ursprüngliche NEUTRAL-Label entstand VOR der bindenden Momentum-Definition.
 - Deal risks:
   1. Champion-Transition — Katharina abgezogen, Miriam unbewiesen, historisch single-threaded, EB-Zugang ungesichert.
   2. Budget-Squeeze — 400k vom Einkauf infrage gestellt (~20% über Wettbewerb), ~355k noch nicht unterschrieben.
