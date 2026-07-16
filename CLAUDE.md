@@ -141,6 +141,24 @@ Was, Entscheidung, Warum). Volle Begründung: ARCHITECTURE_REVIEW.md.
   am Deal + `set-stage`-Befehl (--reason Pflicht bei CLOSED_*). Warum: das Warum
   eines geschlossenen Deals ist das einzige nicht nachholbare Realitäts-Signal;
   das Auswertungs-Modul bleibt Backlog.
+- **[P-KAL Hypothese A / Konfliktfall] Momentum-Konfliktregel** → ENTSCHIEDEN
+  (Lion, 16.07., Referenzfall Voltara): Harte Belege in BEIDE Richtungen im
+  selben Bewertungsfenster → NEUTRAL; Altlasten aus früheren Fenstern drücken
+  den Score, nicht das Momentum. Steht im meddpicc_playbook (Momentum-Abschnitt).
+- **[P-KAL Hypothese B / Referenzen] Momentum-Labels der Alt-Referenzen** →
+  KORRIGIERT (Lion, 16.07.): Meridian NEUTRAL→NEGATIV, Aurelia NEUTRAL→POSITIV.
+  Warum: beide Labels entstanden VOR der bindenden Momentum-Definition; das
+  Modell wandte die Definition korrekt an. Aurelia bleibt POSITIV, weil der
+  Champion-Bruch im Vorfenster lag (Konfliktregel greift nicht).
+- **[P-KAL Hypothese C / Score-Anker] Referenz-Bänder statt Formel** →
+  ENTSCHIEDEN (Lion, 16.07.): Score wird über verbale Bänder mit Golden-Set-
+  Eichpunkten geeicht (0–20 Papyrus 15 · 20–35 Nordwind/Hanseatik 25 · 35–50
+  Meridian 40/Voltara 45 · 50–65 Aurelia 55 · 65–80 · 80+), NICHT als
+  Tier-Summen-Formel. Warum: Lions Referenz-Urteile folgen nachweislich keiner
+  linearen Formel (Analyse über 6 Fälle); Bänder wachsen mit dem Set mit.
+- **[Golden-Set-Prozess] Erst Beispiele, dann kalibrieren** → Lions Instinkt
+  als Regel: Kalibrier-/Referenzentscheidungen werden erst getroffen, wenn
+  diverse Stress-Fälle die Definition getestet haben — nicht umgekehrt.
 
 Weitere P-1-Befunde (Capture-first, Eval-n=3, Snapshot-als-Kontextgrenze,
 Event-Log-Tabelle, Trigger-Generizität, Dual-Framework, Re-Analyse-Dedup,
@@ -437,3 +455,29 @@ Knowledge-Critic (Agent, der Lions Playbooks auf Widersprüche/Lücken gegenlies
   NEUTRAL-Label entstand vor der Definition. (C) Rest-Score-Lücke Aurelia
   (~+11): Gewichtungsanker der 0-3-Tiers nicht definiert. Entscheidung Lion.
   110 pytest grün.
+- **2026-07-16 — P-GS6 (Golden-Set-Ausbau 3→6, Kalibrierung final, Backup):**
+  knowledge/ als eigenes privates Git-Repo gesichert (sales-os-knowledge,
+  Push verifiziert — P3-Backup-Punkt geschlossen). 3 synthetische Stress-Fälle
+  gebaut und von Lion vollständig bewertet (Sparring: Faktenlage je Dimension +
+  Optionswahl): hanseatik 25/NEUTRAL (Default-Referenz), voltara 45/NEUTRAL
+  (Konfliktfall), papyrus 15/NEUTRAL (Tonalitätsfalle). P-KAL-Hypothesen A/B/C
+  entschieden (s. Bewusste Entscheidungen): Konfliktregel + Score-Referenz-
+  Bänder ins Playbook (Backup gepusht), Alt-Labels korrigiert (Meridian→NEGATIV,
+  Aurelia→POSITIV). Parser-Fix + Regression-Test (Momentum-Zeile kippte bei
+  Doppelpunkt im Zusatztext still auf None). Eval-Pflichtlauf über 6 Fälle:
+  Scores Δ 0/0/−2/−1/+3/0 (CAVEAT: die Bänder nennen die Eichpunkt-Scores der
+  Golden-Deals — deren Score-Läufe sind nicht mehr blind; echter Banktest sind
+  künftige Deals). Momentum 4/6: Konfliktregel bei Voltara korrekt angewandt,
+  Aurelia/Meridian/Nordwind korrekt. BEFUND an Lion (kein weiteres Tuning,
+  Befund 2.3): hanseatik+papyrus NEGATIV statt NEUTRAL mit identischem Muster —
+  Modell wertet AUSBLEIBEN angekündigter Aktionen als negative Buyer-Aktion;
+  Vorschlag: 1 Klarstellungssatz in Lions Definition. Confidence 33/48 — Alt-
+  Fälle stabil (8/8, 6/8, 6/8), neue Fälle 5/8, 5/8, 3/8: tragen Lions
+  verschärfte Lesarten aus dem Sparring (EB-Zielmetrik hebt Metrics nicht bei
+  Einzelquellen-Rohzahlen; Teil-Artefakt ≠ halbe Dimension; benannter
+  Wettbewerber ohne Substanz ≠ WAHRSCHEINLICH; Champion zählt nach heutigem
+  Stand) — dokumentiert, bewusst NICHT sofort in den Kalibrier-Block gepflegt.
+  Demo correct --golden gelaufen; OFFEN (Entscheidung Lion): Ablage für
+  Kandidaten aus ECHTEN Deals (Kundenzitate dürfen nicht ins public Repo,
+  eval sucht Notes nur in sample_notes/) → gitignorter Privat-Bereich als
+  Kandidat. 112 pytest grün.

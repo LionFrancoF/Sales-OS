@@ -30,7 +30,7 @@ python -m src.cli --help        # Befehlsübersicht
 # Notes analysieren (erster Agent, P4): Ampel je Dimension + JSON nach outputs/
 python -m src.cli analyze tests/sample_notes/nordwind_01.txt --deal "Nordwind"
 
-# Golden-Set-Eval: Ist vs. Soll qualitativ je Deal (bewusst ohne Gesamtmetrik, n=3)
+# Golden-Set-Eval: Ist vs. Soll qualitativ je Deal (bewusst ohne Gesamtmetrik, n=6)
 python -m src.cli eval
 
 # Persistenz (P5): Stammdaten anlegen, analysieren, korrigieren
@@ -39,6 +39,7 @@ python -m src.cli add-deal "Nordwind Logistics" --name "Ops-Analytics" --stage D
 python -m src.cli analyze tests/sample_notes/nordwind_01.txt --deal "Ops-Analytics"  # -> DB, append-only
 python -m src.cli show-deal "Ops-Analytics"     # Snapshot-Kurzfassung + Kontakte + Korrekturen
 python -m src.cli correct "Ops-Analytics" --field dimensions.champion.confidence --value ZU_PRUEFEN
+python -m src.cli correct "Ops-Analytics" --field overall_score --value 30 --golden  # + Golden-Set-Kandidat exportieren
 
 # Ingestion (P6): klassifizieren, zuordnen (Schwelle 0.8, sonst Nachfrage), routen
 python -m src.cli ingest tests/sample_notes/nordwind_02.txt        # auto-Resolution
