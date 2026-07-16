@@ -7,8 +7,11 @@ Wissen, nicht durch Training.
 
 ## ⚠️ Privat — nicht im Repo
 Die Playbook-Inhalte sind persönliches Sales-IP und **gitignored** (nur diese
-README ist committed; das Repo ist public). Konsequenz: **kein Git-Backup** für
-diese Dateien — den Ordner separat sichern (Time Machine, Drive o.ä.).
+README ist committed; das Repo ist public).
+
+**Backup:** Dieser Ordner ist ein eigenes privates Git-Repo
+(`github.com/LionFrancoF/sales-os-knowledge`). Nach jeder Playbook-Änderung
+hier drin sichern: `git add -A && git commit -m "..." && git push`.
 
 ## Format
 Jede Datei: YAML-Frontmatter + Abschnitte mit `<!-- topic: x -->`-Markern:
@@ -36,7 +39,7 @@ status: FREIGEGEBEN (Lion, 07/2026)
   unhandlich wird.
 
 ## Limit-Verhalten
-Überschreitet die Auswahl `KNOWLEDGE_CHAR_LIMIT` (settings.py, 24.000), schlägt
+Überschreitet die Auswahl `KNOWLEDGE_CHAR_LIMIT` (settings.py, 64.000), schlägt
 der Loader **laut fehl** (ValueError mit Aufstellung) — es wird nie still
 gekürzt. Dann: Topics schärfen oder Limit bewusst erhöhen.
 
