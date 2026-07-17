@@ -501,3 +501,18 @@ Knowledge-Critic (Agent, der Lions Playbooks auf Widersprüche/Lücken gegenlies
   anfassen. Disziplin-Stopp nach diesem Zyklus (Befund 2.3); ob die zwei
   Wording-Fixes einen letzten Mini-Zyklus bekommen, entscheidet Lion.
   116 pytest grün. Haupt-Repo-Push zu GitHub steht aus (wartet auf Lions Go).
+- **2026-07-17 — P-GS6c (Mini-Zyklus + ENDGÜLTIGER Tuning-Stopp):** Lions Go
+  für alles. Wording-Fixes eingebaut (Pain-Leiter ODER-Klausel, Competition-
+  Vorstufe „nichts erhoben → UNBEKANNT"; prompt_version d0dfaebb96be). Finaler
+  Lauf: Momentum 6/6 (2. Lauf in Folge), Scores max |Δ2|, Confidence 39/48 —
+  Summe wie Vorlauf, aber Zusammensetzung verschoben: die 3 gezielten Fixes
+  treffen (Meridian-Pain ✓, Nordwind-Pain ✓, Hanseatik-Competition ✓), dafür
+  flippen 3 andere Grenzzellen (Hanseatik Metrics/Paper, Voltara Pain W↔G,
+  Papyrus Process). BEFUND: Plateau erreicht — alle Rest-Misses sind
+  Nachbarstufen-Flips mit vertretbaren Lesarten in beide Richtungen; weiteres
+  Prompt-Tuning würde Rauschen jagen (Befund 2.3 bestätigt sich empirisch).
+  Tuning-Stopp ist ENDGÜLTIG; nächster Kalibrier-Anlass erst bei n≥10-12 aus
+  echten Deals oder systematischem Fehlermuster im Alltag. Pre-Push-Audit
+  bestanden (nur synthetische Daten/Code getrackt; Playbooks, private/,
+  Kandidaten, outputs, .env, DB alle ignoriert) → Push zu GitHub (Lions Go).
+  116 pytest grün.
