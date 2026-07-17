@@ -86,12 +86,14 @@ die Zahl bestaetigt/selbst gerechnet hat (their math beats your math). ZUSATZ \
 hebt Metrics NICHT auf WAHRSCHEINLICH, solange die Rohzahlen dahinter \
 Einzelquelle sind — erst recht, wenn diese Quelle das Unternehmen verlaesst. \
 Ein von UNS gerechneter Case mit Kundenzahlen ist unser Konstrukt, kein Beleg.
-- Pain-Leiter (16.07.): einseitig artikulierter Pain ohne Konsequenz/Vorfall \
-(nur eine Abteilung, keine Zahl, kein Druck von oben) ist ZU_PRUEFEN. Mehrfach \
-und woertlich belegt PLUS realer Vorfall mit erlebter Konsequenz (z.B. \
-Beinahe-Strafe, beim EB gelandet) ist WAHRSCHEINLICH. GESICHERT erst bei \
-Quantifizierung oder Multi-Stakeholder-Bestaetigung mit klaren Auswirkungen — \
-zweifach-muendlich bleibt muendlich.
+- Pain-Leiter (16.07., praezisiert 17.07.): einseitig-vage artikulierter Pain \
+ohne jede Substanz (eine Person, keine Zahl, kein Vorfall, kein Druck von oben) \
+ist ZU_PRUEFEN. WAHRSCHEINLICH, wenn der Pain wiederholt und woertlich belegt \
+ist UND mindestens EINE Substanz-Saeule dazukommt: ein realer Vorfall mit \
+erlebter Konsequenz ODER ein konkretes Zahlenindiz (auch unvalidiert, z.B. \
+"50-60% der Woche") ODER Bestaetigung durch mehrere Personen. GESICHERT erst \
+bei Quantifizierung oder Multi-Stakeholder-Bestaetigung mit klaren \
+Auswirkungen — zweifach-muendlich bleibt muendlich.
 - Teil-Artefakt-Regel (16.07.): ein erledigtes Teilstueck mit Artefakt (z.B. \
 schriftlich bestandener Security-Review) wertet eine Dimension NICHT auf, wenn \
 der groessere Rest des Weges unbekannt ist (Beschaffung, moegliche Ausschreibung, \
@@ -114,7 +116,12 @@ ZUSATZ (16.07.): Auch beilaeufige oder scherzhafte Saetze ("muss sich gut \
 anfuehlen und bezahlbar sein", "schauen wir uns nix anderes an, wozu") und \
 Allgemeinplaetze ("am Ende entscheidet die GF") sind KEINE Beleglage — die \
 Dimension bleibt UNBEKANNT. Nichts erhoben bleibt nichts.
-- Competition-Leiter: NUR Status-quo/Bordmittel als Hypothese ohne jeden Beleg -> \
+- Competition-Leiter: VOR-STUFE (17.07.): wurde die Wettbewerbslage gar nicht \
+erhoben (keine Aussage, kein Anhaltspunkt in den Notes — auch keine belastbare \
+Verneinung), bleibt die Dimension UNBEKANNT. Die Status-quo-Stufe ist KEIN \
+automatischer Boden: sie setzt einen konkreten Anhaltspunkt in den Notes voraus \
+(z.B. "dann machen wir halt mit Excel weiter", Budget-Zoegern zugunsten des \
+Ist-Zustands). Mit solchem Anhaltspunkt: Status-quo/Bordmittel als Hypothese -> \
 ZU_PRUEFEN. Belegte konkurrierende Angebote/Vergleichsprozesse (z.B. Einkauf \
 vergleicht real, Preisabstand genannt) sind WAHRSCHEINLICH, auch wenn die Anbieter \
 nicht namentlich bekannt sind. Namentlich bekannter, aktiver Wettbewerber mit \
