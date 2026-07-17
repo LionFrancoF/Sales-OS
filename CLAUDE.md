@@ -558,3 +558,29 @@ Knowledge-Critic (Agent, der Lions Playbooks auf Widersprüche/Lücken gegenlies
   bestanden (nur synthetische Daten/Code getrackt; Playbooks, private/,
   Kandidaten, outputs, .env, DB alle ignoriert) → Push zu GitHub (Lions Go).
   116 pytest grün.
+- **2026-07-17 — P-ADV (Berater-Modus V1 + Wissens-Extraktion Teil 2):**
+  Vision-Umsetzung nach Grundgesetz-Anpassung. (1) BERATER gebaut:
+  `src/agents/advisor/` (Prinzipien-Prompt gemäß Berater-Regel, prompt_version;
+  agent.py mit llm.call_text — neuer Text-Call im gemeinsamen LLM-Helper mit
+  Breaker+Kosten-Log; context.py = wiederverwendbarer Kontext-Assembler, nur
+  Repository, ohne LLM testbar). CLI `advise "<frage>" [--deal | --pipeline |
+  --topics a,b] [-i]`; Mehrrunden nur in-memory (kein Konversations-Speicher,
+  kein Vorbau). MODEL_ADVISE=Opus. Berater-Brille kuratiert (7 Playbooks mit
+  advisor-Frontmatter): 58.001 Zeichen — unter 64k mit ~6k Luft. DoD live:
+  Beratungsfrage mit Deal-Kontext — Modell widerspricht der Fragen-Prämisse
+  (CFO-Zugang verfrüht), wendet Playbook-Regeln situativ an, markiert
+  ANNAHME/ZU_PRUEFEN, findet Datums-Diskrepanz in Demo-Daten; 27 ct/46s.
+  (2) Extraktion Teil 2 integriert: negotiation_playbook.md NEU (12. Datei,
+  Verhandlungs-Lücke geschlossen) + 7 Playbooks erweitert (12 Discovery-Frage-
+  Paare, Buyer's Decision Map als LESE-Schema — Aussagen bewusst KEINE harten
+  Momentum-Belege, Lions kalibrierte Definition bleibt maßgeblich; Momentum-
+  Käuferverhalten, Evidence over Opinion, CoI, MAP-Adoptions-Test, EB-vor-
+  Procurement, Disqual-Regeln, C-Suite-Personas, Trigger-Taxonomie, ICP 5 Fits,
+  Sequencing, Social Selling, Reference Ladder, Follow-up-Kadenz). Dabei
+  KORRIGIERT (Fremdextraktion enthielt falsche Architektur-Annahmen): kein
+  Trigger-Envelope gebaut (1.5), STAGE_GATES liegen in settings.py nicht
+  config.yaml (1.4). 64k-Limit erstmals live ausgelöst (meeting_prep 64.095) →
+  Kuratierung zurückgenommen statt Limit erhöht; Topic-Profile rücken näher.
+  125 pytest grün (9 neue: Kontext-Assembler + Advisor gemockt). Offen: Lions
+  Review der neuen Playbook-Abschnitte; Beobachtungsphase Berater-Nutzung
+  (welche Fragen wiederholen sich → Produktisierungs-Kandidaten).

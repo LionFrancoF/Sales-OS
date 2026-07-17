@@ -25,6 +25,7 @@ DB_PATH: Final[Path] = Path(__file__).resolve().parents[2] / "sales_os.db"
 MODEL_CLASSIFY: Final[str] = "claude-haiku-4-5-20251001"  # Klassifizierung, Entity-Resolution, Extraktion
 MODEL_ANALYZE: Final[str] = "claude-opus-4-8"             # MEDDPICC-Analyse, Research-Synthese (Qualität kritisch)
 MODEL_DEFAULT: Final[str] = "claude-sonnet-5"             # Meeting-Prep, Briefing, mittlere Aufgaben
+MODEL_ADVISE: Final[str] = "claude-opus-4-8"              # Berater (advise): Beratungsqualität = Kern der Vision
 
 # --- Schwellen ---
 RESOLUTION_THRESHOLD: Final[float] = 0.8   # Entity-Resolution: darunter nachfragen statt raten

@@ -306,6 +306,53 @@ def cmd_export_notes(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_advise(args: argparse.Namespace) -> int:
+    """advise — der Berater: freie Sales-Fragen durch Lions Brille (read-only)."""
+    from src.agents.advisor.agent import advise
+
+    topics = [t.strip() for t in args.topics.split(",")] if args.topics else None
+
+    if args.interactive:
+        print("Berater-Modus (interaktiv). Leere Eingabe oder 'exit' beendet.")
+        history: list[dict] = []
+        first = True
+        while True:
+            try:
+                question = input("\nDu: ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print()
+                break
+            if not question or question.lower() in {"exit", "quit"}:
+                break
+            try:
+                answer, history = advise(
+                    question,
+                    deal_name=args.deal if first else None,
+                    pipeline=args.pipeline if first else False,
+                    topics=topics,
+                    history=history or None,
+                )
+            except LookupError as e:
+                log.error("%s", e)
+                return 1
+            first = False
+            print(f"\nBerater:\n{answer}")
+        return 0
+
+    if not args.question:
+        log.error("Frage fehlt. Nutzung: advise \"<frage>\" [--deal X | --pipeline] oder advise -i")
+        return 1
+    try:
+        answer, _ = advise(
+            args.question, deal_name=args.deal, pipeline=args.pipeline, topics=topics
+        )
+    except LookupError as e:
+        log.error("%s", e)
+        return 1
+    print(answer)
+    return 0
+
+
 def _export_notes(deal, target_dir: Path) -> list[Path]:
     """Schreibt die Roh-Texte aller Activities eines Deals chronologisch als
     <slug>_NN.txt in target_dir (Privat-Ablage: echte Kundendaten, gitignored).
@@ -537,6 +584,17 @@ def build_parser() -> argparse.ArgumentParser:
                             "(tests/sample_notes/private/, gitignored — echte Kundendaten)")
     p.add_argument("deal", help="Deal-Name")
     p.set_defaults(func=cmd_export_notes)
+
+    p = sub.add_parser("advise",
+                       help="Der Berater: freie Sales-Frage durch Lions Brille beantworten "
+                            "(read-only; Kontext optional per --deal oder --pipeline)")
+    p.add_argument("question", nargs="?", help="Die Frage (bei -i optional)")
+    p.add_argument("--deal", help="Deal-Name: kompletter Deal-Kontext aus der DB")
+    p.add_argument("--pipeline", action="store_true", help="Kompakt-Digest aller Deals als Kontext")
+    p.add_argument("--topics", help="Kommagetrennte Topics: nur passende Playbook-Abschnitte laden")
+    p.add_argument("-i", "--interactive", action="store_true",
+                   help="Mehrrunden-Gespraech (Verlauf nur im Arbeitsspeicher)")
+    p.set_defaults(func=cmd_advise)
 
     for name, help_text in _PLACEHOLDER_COMMANDS:
         p = sub.add_parser(name, help=help_text)

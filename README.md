@@ -45,6 +45,11 @@ python -m src.cli export-notes "Ops-Analytics"  # Roh-Notes -> tests/sample_note
 # Ingestion (P6): klassifizieren, zuordnen (Schwelle 0.8, sonst Nachfrage), routen
 python -m src.cli ingest tests/sample_notes/nordwind_02.txt        # auto-Resolution
 python -m src.cli set-stage "Ops-Analytics" CLOSED_LOST --reason "Budget gestrichen"
+
+# Der Berater (Haupteingang, Vision 17.07.): freie Fragen durch Lions Brille, read-only
+python -m src.cli advise "Wie gehe ich den Account nach dem Champion-Wechsel an?" --deal "Ops-Analytics"
+python -m src.cli advise "Was ist diese Woche in meiner Pipeline wichtig?" --pipeline
+python -m src.cli advise -i --deal "Ops-Analytics"   # Mehrrunden-Gespraech (Verlauf nur in der Session)
 ```
 
 Implementiert: P4 (`analyze`, `eval`), P5 (Persistenz-Befehle), P6 (`ingest`, `set-stage`):
@@ -57,6 +62,7 @@ Implementiert: P4 (`analyze`, `eval`), P5 (Persistenz-Befehle), P6 (`ingest`, `s
 | `list-deals` / `show-deal` ✓ | Deals ansehen (Snapshot, Kontakte, Korrekturen) | P5 |
 | `correct` ✓ | Korrektur zum letzten Snapshot speichern (Feedback wird gesammelt; Injektion nach M4) | P5 |
 | `export-notes` ✓ | Roh-Notes eines echten Deals in die gitignorte Privat-Ablage (Golden-Set ohne Kundendaten-Leak) | P-GS6 |
+| `advise` ✓ | Der Berater: freie Sales-Fragen durch Lions Brille (Kontext: `--deal` / `--pipeline` / `--topics`; `-i` interaktiv) | P-ADV |
 | `ingest` ✓ | Text aufnehmen: klassifizieren, Deal auflösen (nachfragen statt raten), routen | P6 |
 | `set-stage` ✓ | Stage wechseln; bei CLOSED_* mit `--reason` (Won/Lost, Befund 2.7) | P6 |
 | `research` | Deep-Research zu einem Account | M1 |

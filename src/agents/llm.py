@@ -69,6 +69,37 @@ def _client():
     return anthropic.Anthropic()
 
 
+def call_text(
+    *,
+    model: str,
+    system: list[dict] | str,
+    messages: list[dict],
+    max_tokens: int,
+    thinking: dict | None = None,
+) -> str:
+    """Ein API-Call mit freier Text-Antwort (Berater/Prosa; mehrere Turns erlaubt).
+
+    Zweiter Konsumententyp neben call_structured: gleicher Circuit-Breaker,
+    gleiche eine Kosten-Logzeile — nur ohne Output-Schema."""
+    _check_circuit_breaker()
+    kwargs: dict = {}
+    if thinking is not None:
+        kwargs["thinking"] = thinking
+    t0 = time.perf_counter()
+    response = _client().messages.create(
+        model=model,
+        max_tokens=max_tokens,
+        system=system,
+        messages=messages,
+        **kwargs,
+    )
+    _log_call(model, response.usage, time.perf_counter() - t0)
+    text = "".join(b.text for b in response.content if getattr(b, "type", "") == "text")
+    if not text.strip():
+        raise ValueError(f"Leere Text-Antwort (stop_reason={response.stop_reason}).")
+    return text
+
+
 def call_structured(
     *,
     model: str,
