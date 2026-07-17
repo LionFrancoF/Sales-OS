@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from src.cli import _export_notes
+from src.agents.meddpicc.golden import export_notes as _export_notes
 from src.domain.account import Account
 from src.domain.activity import Activity
 from src.domain.deal import Deal

@@ -96,7 +96,11 @@ def test_analyze_unknown_deal_fails_cleanly(mock_llm):
 
 
 def test_correct_golden_exports_candidate(mock_llm, tmp_path, monkeypatch, capsys):
-    """--golden exportiert eine vorausgefuellte Golden-Set-Vorlage (Wachstum Richtung n>=20)."""
+    """--golden exportiert eine vorausgefuellte Golden-Set-Vorlage (Wachstum Richtung n>=20).
+    Zielordner auf tmp gepatcht — nie in den echten Kandidaten-Ordner schreiben
+    (Isolations-Lehre 16.07.: Demo-Artefakt brach diesen Test)."""
+    from src.agents.meddpicc import golden
+    monkeypatch.setattr(golden, "CANDIDATES_DIR", tmp_path / "candidates")
     assert cli.main(["add-account", "--name", "Nordwind Logistics"]) == 0
     assert cli.main(["add-deal", "Nordwind Logistics", "--name", "Ops-Analytics"]) == 0
     assert cli.main(["analyze", str(NOTES), "--deal", "Ops-Analytics"]) == 0
@@ -106,13 +110,10 @@ def test_correct_golden_exports_candidate(mock_llm, tmp_path, monkeypatch, capsy
     out = capsys.readouterr().out
     assert "Golden-Set-Kandidat exportiert" in out
 
-    candidates_dir = Path(cli.__file__).resolve().parent.parent / "tests" / "golden_set_candidates"
-    files = sorted(candidates_dir.glob("ops-analytics_*.expected.md")) or sorted(
-        candidates_dir.glob("ops_analytics_*.expected.md"))
+    files = sorted((tmp_path / "candidates").glob("ops-analytics_*.expected.md"))
     assert files, "Kandidaten-Datei fehlt"
     content = files[-1].read_text(encoding="utf-8")
     assert "VON LION ZU PRUEFEN" in content
     assert "- Confidence: ZU_PRUEFEN" in content       # Ist-Werte vorausgefuellt
     assert "- Momentum (POSITIV / NEUTRAL / NEGATIV): NEGATIV" in content
     assert "- Signal-Bonus (0–5): 0" in content
-    files[-1].unlink()  # Testartefakt aufraeumen

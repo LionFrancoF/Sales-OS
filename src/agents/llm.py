@@ -20,9 +20,20 @@ from src.config import settings
 
 log = logging.getLogger("sales_os.llm")
 
-# Circuit-Breaker-Zaehler, gelten pro CLI-Aufruf (Prozess), ueber alle Modelle.
+# Circuit-Breaker-Zaehler: gelten pro NUTZER-AKTION (CLI-Befehl, API-Request,
+# interaktiver Berater-Turn), ueber alle Modelle. WICHTIG: in langlebigen
+# Prozessen (uvicorn, advise -i) muss reset_budget() am Aktions-Eintritt
+# aufgerufen werden — sonst akkumulieren die Zaehler ueber Aktionen hinweg
+# und der Breaker wuergt den Prozess dauerhaft ab (Befund 17.07.).
 _calls_this_command = 0
 _tokens_this_command = 0
+
+
+def reset_budget() -> None:
+    """Setzt die Breaker-Zaehler fuer eine neue Nutzer-Aktion zurueck."""
+    global _calls_this_command, _tokens_this_command
+    _calls_this_command = 0
+    _tokens_this_command = 0
 
 
 def _check_circuit_breaker() -> None:

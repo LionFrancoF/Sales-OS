@@ -35,6 +35,17 @@ app = FastAPI(
 )
 
 
+@app.middleware("http")
+async def _reset_llm_budget(request, call_next):
+    """Breaker-Zaehler gelten pro Nutzer-Aktion: im langlebigen Server-Prozess
+    heisst das pro Request — sonst wuergt der Breaker die API nach kumulierten
+    25 Calls dauerhaft ab (Befund 17.07., Regression-Test vorhanden)."""
+    from src.agents import llm
+
+    llm.reset_budget()
+    return await call_next(request)
+
+
 # ---------------------------------------------------------------- Request-/Response-Modelle
 
 class IngestRequest(BaseModel):
@@ -52,6 +63,18 @@ class CorrectionRequest(BaseModel):
     field_path: str = Field(description="z.B. dimensions.champion.confidence")
     corrected_value: str
     comment: str = ""
+
+
+class AdviseRequest(BaseModel):
+    question: str = Field(description="Freie Sales-Frage an den Berater.")
+    deal_name: str | None = Field(default=None, description="Deal-Vollkontext aus der DB.")
+    pipeline: bool = Field(default=False, description="Kompakt-Digest aller Deals als Kontext.")
+    topics: list[str] | None = Field(default=None, description="Nur passende Playbook-Abschnitte laden.")
+
+
+class AdviseResponse(BaseModel):
+    answer: str
+    prompt_version: str
 
 
 class DealDetail(BaseModel):
@@ -93,6 +116,22 @@ def post_ingest(body: IngestRequest):
     if report.aborted:
         raise HTTPException(status_code=409, detail=report.aborted)
     return report
+
+
+@app.post("/advise", response_model=AdviseResponse)
+def post_advise(body: AdviseRequest):
+    """Der Berater — dieselbe Funktion wie `cli advise` (one-shot, stateless;
+    Mehrrunden-Verlauf ist bewusst ein CLI-Session-Feature)."""
+    from src.agents.advisor.agent import advise
+    from src.agents.advisor.prompts import PROMPT_VERSION
+
+    try:
+        answer, _ = advise(
+            body.question, deal_name=body.deal_name, pipeline=body.pipeline, topics=body.topics
+        )
+    except LookupError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    return AdviseResponse(answer=answer, prompt_version=PROMPT_VERSION)
 
 
 @app.post("/deals/{deal_id}/analyze", response_model=MeddpiccSnapshot)

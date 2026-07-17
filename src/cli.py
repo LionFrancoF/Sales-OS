@@ -24,16 +24,8 @@ GOLDEN_DIR = Path(__file__).resolve().parent.parent / "tests" / "golden_set"
 NOTES_DIR = Path(__file__).resolve().parent.parent / "tests" / "sample_notes"
 
 _AMPEL = {"GESICHERT": "🟢", "WAHRSCHEINLICH": "🟡", "ZU_PRUEFEN": "🟠", "UNBEKANNT": "⚪"}
-_DIMENSION_ORDER = [
-    ("metrics", "Metrics"),
-    ("economic_buyer", "Economic Buyer"),
-    ("decision_criteria", "Decision Criteria"),
-    ("decision_process", "Decision Process"),
-    ("paper_process", "Paper Process"),
-    ("identify_pain", "Identify Pain"),
-    ("champion", "Champion"),
-    ("competition", "Competition"),
-]
+
+from src.agents.meddpicc.golden import DIMENSION_ORDER as _DIMENSION_ORDER  # noqa: E402
 
 _PLACEHOLDER_COMMANDS: list[tuple[str, str]] = [
     ("research", "Deep-Research zu einem Account (Modul M1)"),
@@ -275,7 +267,9 @@ def cmd_correct(args: argparse.Namespace) -> int:
           f"'{correction.original_value}' -> '{correction.corrected_value}'")
     print("(Sammlung ab Tag 1; Injektion in Analysen bewusst erst nach M4 — CLAUDE.md)")
     if args.golden:
-        path = _export_golden_candidate(deal)
+        from src.agents.meddpicc.golden import export_golden_candidate
+
+        path = export_golden_candidate(deal)
         if path:
             print(f"Golden-Set-Kandidat exportiert: {path}")
             print("(Ist-Werte als Vorlage — pruefen/korrigieren, dann als <slug>_NN.expected.md verschieben:")
@@ -286,6 +280,7 @@ def cmd_correct(args: argparse.Namespace) -> int:
 
 def cmd_export_notes(args: argparse.Namespace) -> int:
     """export-notes <deal> — Roh-Notes eines echten Deals fuer die Golden-Set-Privat-Ablage exportieren."""
+    from src.agents.meddpicc.golden import export_notes
     from src.repository.deals import get_deal_by_name
 
     try:
@@ -293,8 +288,7 @@ def cmd_export_notes(args: argparse.Namespace) -> int:
     except LookupError as e:
         log.error("%s", e)
         return 1
-    target_dir = Path(__file__).resolve().parent.parent / "tests" / "sample_notes" / "private"
-    written = _export_notes(deal, target_dir)
+    written = export_notes(deal)
     if not written:
         log.error("Keine Activities mit Roh-Text fuer '%s' — nichts zu exportieren.", deal.name)
         return 1
@@ -325,6 +319,8 @@ def cmd_advise(args: argparse.Namespace) -> int:
             if not question or question.lower() in {"exit", "quit"}:
                 break
             try:
+                from src.agents import llm
+                llm.reset_budget()  # Breaker gilt pro Turn, nicht pro Session (Befund 17.07.)
                 answer, history = advise(
                     question,
                     deal_name=args.deal if first else None,
@@ -351,89 +347,6 @@ def cmd_advise(args: argparse.Namespace) -> int:
         return 1
     print(answer)
     return 0
-
-
-def _export_notes(deal, target_dir: Path) -> list[Path]:
-    """Schreibt die Roh-Texte aller Activities eines Deals chronologisch als
-    <slug>_NN.txt in target_dir (Privat-Ablage: echte Kundendaten, gitignored).
-    Gegenstueck zu _export_golden_candidate — zusammen ergeben sie einen
-    eval-faehigen Fall aus einem echten Deal."""
-    from src.repository.activities import list_activities
-
-    activities = [a for a in list_activities(deal.id) if a.raw_text.strip()]
-    if not activities:
-        return []
-    activities.sort(key=lambda a: a.occurred_at)
-    target_dir.mkdir(parents=True, exist_ok=True)
-    slug = deal.name.lower().replace(" ", "_")
-    written: list[Path] = []
-    for i, activity in enumerate(activities, 1):
-        path = target_dir / f"{slug}_{i:02d}.txt"
-        path.write_text(activity.raw_text, encoding="utf-8")
-        written.append(path)
-    return written
-
-
-def _export_golden_candidate(deal) -> Path | None:
-    """Exportiert den letzten Snapshot als vorausgefuellte Golden-Set-Vorlage.
-
-    Organisches Wachstum des Golden Sets Richtung n>=20 durch taegliche Nutzung
-    (Befund 2.3). Kandidaten koennen echte Kundendaten enthalten -> Ordner ist
-    gitignored; Lion prueft, korrigiert und verschiebt von Hand.
-    """
-    from src.repository.activities import list_activities
-    from src.repository.snapshots import get_latest_snapshot
-
-    snapshot = get_latest_snapshot(deal.id)
-    if snapshot is None:
-        log.warning("--golden: kein Snapshot fuer '%s' — nichts zu exportieren.", deal.name)
-        return None
-    activities = list_activities(deal.id)
-    sources = ", ".join(a.source or a.id[:8] for a in activities) or "(keine Activities erfasst)"
-
-    lines = [
-        f"# Golden-Set-KANDIDAT — {deal.name} (VON LION ZU PRUEFEN)",
-        "",
-        f"> Ist-Werte des Snapshots vom {snapshot.created_at:%Y-%m-%d %H:%M} als Vorlage —",
-        "> jede Zeile pruefen/korrigieren, dann als <slug>_NN.expected.md verschieben:",
-        "> echte Kundendaten -> tests/golden_set/private/ (gitignored, Notes via export-notes),",
-        "> synthetische Faelle -> tests/golden_set/.",
-        f"> Input-Notes: {sources}",
-        f"> prompt_version des Ist-Laufs: {snapshot.prompt_version}",
-        "",
-    ]
-    for key, heading in _DIMENSION_ORDER:
-        dim = snapshot.dimensions.get(key)
-        if dim is None:
-            continue
-        lines += [
-            f"## {heading}",
-            f"- Findings: {dim.findings}",
-            f"- Confidence: {dim.confidence}",
-            f"- Evidence: {'; '.join(dim.evidence)}",
-            f"- Gaps: {'; '.join(dim.gaps)}",
-            f"- Trend: {dim.trend}",
-            f"- Recommended action: {dim.recommended_action}",
-            f"- Next question: {dim.next_question}",
-            "",
-        ]
-    lines += [
-        "## Gesamt",
-        f"- Overall score (0–100): {snapshot.overall_score}",
-        f"- Signal-Bonus (0–5): {snapshot.signal_bonus}",
-        f"- Score rationale: {snapshot.score_rationale}",
-        f"- Momentum (POSITIV / NEUTRAL / NEGATIV): {snapshot.momentum}",
-        f"- Momentum rationale: {snapshot.momentum_rationale}",
-        f"- Deal risks: {'; '.join(snapshot.deal_risks)}",
-        f"- Next best questions (max 5, priorisiert): {'; '.join(snapshot.next_best_questions)}",
-        f"- Summary for manager (3 Saetze, forecast-tauglich): {snapshot.summary_for_manager}",
-    ]
-    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    target_dir = Path(__file__).resolve().parent.parent / "tests" / "golden_set_candidates"
-    target_dir.mkdir(parents=True, exist_ok=True)
-    path = target_dir / f"{deal.name.lower().replace(' ', '_')}_{ts}.expected.md"
-    path.write_text("\n".join(lines), encoding="utf-8")
-    return path
 
 
 # ---------------------------------------------------------------- P6-Befehle
