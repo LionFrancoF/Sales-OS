@@ -2,11 +2,18 @@
 
 ## Projektziel
 AI-natives Sales-Betriebssystem für Enterprise Sales / Forward Deployed
-Engineering. Mehrere spezialisierte Agenten (MEDDPICC-Analyse, Research,
-Account-Mapping, Meeting-Prep, Pipeline-Briefing u.a.) arbeiten über ein
-gemeinsames Datenmodell und einen Ingestion-Orchestrator zusammen und
-unterstützen den kompletten Sales-Alltag. Zugleich Portfolio-Projekt:
-Jede Architektur-Entscheidung muss in 2 Sätzen erklärbar sein.
+Engineering — im Kern ein BERATER für komplexe Sales-Situationen, KEIN
+RAG-System: Lions Playbooks sind die BRILLE, durch die das System denkt
+(Volltext-Injection), nicht eine Datenbank, aus der es zitiert. Lion stellt
+freie Fragen (Outreach, Account-Strategie, Signale einschätzen, Buying
+Committee); das System antwortet flexibel wie ein starkes LLM — aber immer
+durch Lions Methodik und auf Basis der gespeicherten Beleglage. Spezialisierte
+Agenten (MEDDPICC-Analyse gebaut; Research u.a. geplant) und der
+Ingestion-Orchestrator pflegen dafür das gemeinsame Gedächtnis (Datenmodell).
+Das System wächst in Etappen: weitere Wissens-Brillen → echte Pipeline (nach
+Lions Job-Pause) → ICP/Produktbeschreibung als eigene Knowledge-Dateien.
+Zugleich Portfolio-Projekt: Jede Architektur-Entscheidung muss in 2 Sätzen
+erklärbar sein.
 
 ## Rolle von Claude Code (WICHTIG — zuerst lesen)
 Du bist kein Ausführer, du bist mein Senior Engineer. Wenn eine Idee
@@ -159,6 +166,19 @@ Was, Entscheidung, Warum). Volle Begründung: ARCHITECTURE_REVIEW.md.
 - **[Golden-Set-Prozess] Erst Beispiele, dann kalibrieren** → Lions Instinkt
   als Regel: Kalibrier-/Referenzentscheidungen werden erst getroffen, wenn
   diverse Stress-Fälle die Definition getestet haben — nicht umgekehrt.
+- **[Vision / 17.07.] Berater-Modus als Haupteingang** → ENTSCHIEDEN (Lion).
+  System ist im Kern Berater (Brille, kein RAG); `advise` wird zweiter realer
+  Eingang (Prinzipien-Prompt, read-only, drei Kontext-Modi: ohne/--deal/
+  --pipeline). Freie Beratung bewusst OHNE Golden-Eval in V1 (Richter: Lion;
+  Beleg-Kopplung über Confidence-Sprache macht Fehlurteile erkennbar —
+  Korrekturen im Gespräch sind Rohmaterial für spätere Berater-Referenzen).
+  M-Rollen neu definiert: M1 = neue Fähigkeit (Web-Research), M2 = neue
+  Datenstruktur (Beziehungen), M3/M4 = Produktisierung wiederkehrender
+  Berater-Fragen — erst bei belegtem Bedarf aus echter Nutzung, nicht vorab.
+- **[Wachstums-Regel / 17.07.]** → in Architektur verankert (bindend):
+  Wachsen + Verbinden über gemeinsames Datenmodell und geteilte Bausteine,
+  nie über autonome Agent-zu-Agent-Aufrufe; Schnittstellen billig erweiterbar
+  bauen, Erweiterungen erst bei Bedarf.
 
 Weitere P-1-Befunde (Capture-first, Eval-n=3, Snapshot-als-Kontextgrenze,
 Event-Log-Tabelle, Trigger-Generizität, Dual-Framework, Re-Analyse-Dedup,
@@ -175,12 +195,34 @@ Ingestion läuft vorerst SYNCHRON (mehrere LLM-Calls pro Aufruf) — perfekt
 für die CLI. Für eine spätere responsive App: Background-Jobs (Backlog),
 daher keine Businesslogik auf synchrone Ausführung fest verdrahten.
 
-Der Orchestrator hat EINEN realen Eingang: `process_note(text)` — bewusst
-KEIN generischer Trigger-Envelope und keine PLANNING-Tür (Befund 1.5,
+Das System hat ZWEI reale Eingänge (Vision-Entscheidung 17.07.2026):
+1. `process_note(text)` — Daten REIN: klassifizieren, zuordnen, bewerten,
+   Gedächtnis pflegen.
+2. Der BERATER (`advise`) — Denken RAUS: freie Fragen durch Lions Brille,
+   auf Basis des Gedächtnisses (Repository-Kontext), Antwort in Prosa,
+   strikt read-only (Festhalten von Ergebnissen läuft über `ingest`).
+   Berater-Regel (BINDEND): Sein Prompt enthält NUR Prinzipien (Rolle,
+   Brille, Beleg-Disziplin, Annahmen markieren) — NIE aufgabenspezifische
+   Anleitungen. Braucht eine Aufgabenart Spezialbehandlung, wird sie als
+   eigener Agent produktisiert statt den Berater-Prompt aufzublähen.
+Bewusst KEIN generischer Trigger-Envelope und keine PLANNING-Tür (Befund 1.5,
 entschieden bei P6). Die inneren Bausteine (classifier, resolver, Routing-
-Schritte) sind getrennt und wiederverwendbar; kommt später ein zweiter
-realer Trigger (Signal-Monitoring, Stale-Alerts), wird dann informiert
-generalisiert. Der Router ist regelbasiert (Signal → Agent).
+Schritte, Kontext-Assembler) sind getrennt und wiederverwendbar; kommt später
+ein weiterer realer Trigger (Signal-Monitoring, Stale-Alerts), wird dann
+informiert generalisiert. Der Router ist regelbasiert (Signal → Agent).
+
+WACHSTUMS-REGEL (BINDEND, Lion 17.07.2026): Das System ist auf Wachsen und
+Verbinden ausgelegt — es muss stärker werden können, indem Teile kombiniert
+werden. Neue Fähigkeiten (Agenten, Brillen, Datenquellen, Werkzeuge) docken
+über die bestehenden Schnittstellen an (Repository, Knowledge-Loader,
+Router/Orchestrator) und DÜRFEN und SOLLEN vorhandene Bausteine
+wiederverwenden und kombinieren (z.B. Berater nutzt künftige
+Research-Ergebnisse; Module nutzen den Berater-Kontext-Assembler).
+Verbinden heißt: gemeinsames Datenmodell + geteilte, einzeln testbare
+Bausteine — NICHT Agenten, die einander autonom aufrufen. Jede neue
+Verbindung bleibt deterministisch, testbar und in 2 Sätzen erklärbar.
+Schnittstellen werden so gebaut, dass Erweiterung billig ist; die
+Erweiterung selbst wird erst gebaut, wenn sie dran ist.
 
 Schichten von innen nach außen. Verstöße gegen diese Regeln sind Bugs:
 1. `src/domain/` — Pydantic-Modelle. Null Logik, null Imports aus anderen Schichten.
