@@ -40,6 +40,7 @@ python -m src.cli analyze tests/sample_notes/nordwind_01.txt --deal "Ops-Analyti
 python -m src.cli show-deal "Ops-Analytics"     # Snapshot-Kurzfassung + Kontakte + Korrekturen
 python -m src.cli correct "Ops-Analytics" --field dimensions.champion.confidence --value ZU_PRUEFEN
 python -m src.cli correct "Ops-Analytics" --field overall_score --value 30 --golden  # + Golden-Set-Kandidat exportieren
+python -m src.cli export-notes "Ops-Analytics"  # Roh-Notes -> tests/sample_notes/private/ (gitignored, echte Kundendaten)
 
 # Ingestion (P6): klassifizieren, zuordnen (Schwelle 0.8, sonst Nachfrage), routen
 python -m src.cli ingest tests/sample_notes/nordwind_02.txt        # auto-Resolution
@@ -55,6 +56,7 @@ Implementiert: P4 (`analyze`, `eval`), P5 (Persistenz-Befehle), P6 (`ingest`, `s
 | `add-account` / `add-deal` / `add-contact` ✓ | Stammdaten anlegen (Kontakt mit Dubletten-Schutz) | P5 |
 | `list-deals` / `show-deal` ✓ | Deals ansehen (Snapshot, Kontakte, Korrekturen) | P5 |
 | `correct` ✓ | Korrektur zum letzten Snapshot speichern (Feedback wird gesammelt; Injektion nach M4) | P5 |
+| `export-notes` ✓ | Roh-Notes eines echten Deals in die gitignorte Privat-Ablage (Golden-Set ohne Kundendaten-Leak) | P-GS6 |
 | `ingest` ✓ | Text aufnehmen: klassifizieren, Deal auflösen (nachfragen statt raten), routen | P6 |
 | `set-stage` ✓ | Stage wechseln; bei CLOSED_* mit `--reason` (Won/Lost, Befund 2.7) | P6 |
 | `research` | Deep-Research zu einem Account | M1 |

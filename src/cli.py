@@ -278,8 +278,53 @@ def cmd_correct(args: argparse.Namespace) -> int:
         path = _export_golden_candidate(deal)
         if path:
             print(f"Golden-Set-Kandidat exportiert: {path}")
-            print("(Ist-Werte als Vorlage — von Lion zu pruefen/korrigieren, dann nach tests/golden_set/ verschieben)")
+            print("(Ist-Werte als Vorlage — pruefen/korrigieren, dann als <slug>_NN.expected.md verschieben:")
+            print(" echte Kundendaten -> tests/golden_set/private/ (gitignored, + export-notes),")
+            print(" synthetische Faelle -> tests/golden_set/)")
     return 0
+
+
+def cmd_export_notes(args: argparse.Namespace) -> int:
+    """export-notes <deal> — Roh-Notes eines echten Deals fuer die Golden-Set-Privat-Ablage exportieren."""
+    from src.repository.deals import get_deal_by_name
+
+    try:
+        deal = get_deal_by_name(args.deal)
+    except LookupError as e:
+        log.error("%s", e)
+        return 1
+    target_dir = Path(__file__).resolve().parent.parent / "tests" / "sample_notes" / "private"
+    written = _export_notes(deal, target_dir)
+    if not written:
+        log.error("Keine Activities mit Roh-Text fuer '%s' — nichts zu exportieren.", deal.name)
+        return 1
+    for p in written:
+        print(f"Note exportiert: {p}")
+    slug = deal.name.lower().replace(" ", "_")
+    print(f"(gitignored; passende Golden-Referenz als {slug}_{len(written):02d}.expected.md "
+          f"nach tests/golden_set/private/ — der Eval findet beides automatisch)")
+    return 0
+
+
+def _export_notes(deal, target_dir: Path) -> list[Path]:
+    """Schreibt die Roh-Texte aller Activities eines Deals chronologisch als
+    <slug>_NN.txt in target_dir (Privat-Ablage: echte Kundendaten, gitignored).
+    Gegenstueck zu _export_golden_candidate — zusammen ergeben sie einen
+    eval-faehigen Fall aus einem echten Deal."""
+    from src.repository.activities import list_activities
+
+    activities = [a for a in list_activities(deal.id) if a.raw_text.strip()]
+    if not activities:
+        return []
+    activities.sort(key=lambda a: a.occurred_at)
+    target_dir.mkdir(parents=True, exist_ok=True)
+    slug = deal.name.lower().replace(" ", "_")
+    written: list[Path] = []
+    for i, activity in enumerate(activities, 1):
+        path = target_dir / f"{slug}_{i:02d}.txt"
+        path.write_text(activity.raw_text, encoding="utf-8")
+        written.append(path)
+    return written
 
 
 def _export_golden_candidate(deal) -> Path | None:
@@ -303,7 +348,9 @@ def _export_golden_candidate(deal) -> Path | None:
         f"# Golden-Set-KANDIDAT — {deal.name} (VON LION ZU PRUEFEN)",
         "",
         f"> Ist-Werte des Snapshots vom {snapshot.created_at:%Y-%m-%d %H:%M} als Vorlage —",
-        "> jede Zeile pruefen/korrigieren, dann als <name>.expected.md nach tests/golden_set/.",
+        "> jede Zeile pruefen/korrigieren, dann als <slug>_NN.expected.md verschieben:",
+        "> echte Kundendaten -> tests/golden_set/private/ (gitignored, Notes via export-notes),",
+        "> synthetische Faelle -> tests/golden_set/.",
         f"> Input-Notes: {sources}",
         f"> prompt_version des Ist-Laufs: {snapshot.prompt_version}",
         "",
@@ -484,6 +531,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--golden", action="store_true",
                    help="letzten Snapshot als Golden-Set-Kandidat exportieren (organisches Wachstum Richtung n>=20)")
     p.set_defaults(func=cmd_correct)
+
+    p = sub.add_parser("export-notes",
+                       help="Roh-Notes eines Deals in die Golden-Set-Privat-Ablage exportieren "
+                            "(tests/sample_notes/private/, gitignored — echte Kundendaten)")
+    p.add_argument("deal", help="Deal-Name")
+    p.set_defaults(func=cmd_export_notes)
 
     for name, help_text in _PLACEHOLDER_COMMANDS:
         p = sub.add_parser(name, help=help_text)

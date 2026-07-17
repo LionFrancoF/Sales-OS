@@ -75,14 +75,24 @@ def parse_expected(path: Path) -> ExpectedAnalysis:
 
 
 def find_golden_cases(golden_dir: Path, notes_dir: Path) -> list[tuple[ExpectedAnalysis, list[Path]]]:
-    """Findet alle Golden-Set-Vorlagen + die zugehoerigen, chronologischen Notes."""
+    """Findet alle Golden-Set-Vorlagen + die zugehoerigen, chronologischen Notes.
+
+    Scannt zusaetzlich die gitignorten private/-Unterordner (Referenzen aus
+    ECHTEN Deals mit Kundenzitaten — duerfen nie ins public Repo, laufen aber
+    im Eval mit; Entscheidung Lion 17.07.2026)."""
     cases = []
-    for expected_file in sorted(golden_dir.glob("*.expected.md")):
+    expected_files = sorted(golden_dir.glob("*.expected.md")) + sorted(
+        (golden_dir / "private").glob("*.expected.md")
+    )
+    for expected_file in expected_files:
         expected = parse_expected(expected_file)
-        note_files = sorted(notes_dir.glob(f"{expected.account}_*.txt"))
+        note_files = sorted(notes_dir.glob(f"{expected.account}_*.txt")) + sorted(
+            (notes_dir / "private").glob(f"{expected.account}_*.txt")
+        )
         if not note_files:
             raise FileNotFoundError(
-                f"Keine Notes fuer Golden-Set-Account '{expected.account}' in {notes_dir}."
+                f"Keine Notes fuer Golden-Set-Account '{expected.account}' in "
+                f"{notes_dir} (oder {notes_dir}/private)."
             )
         cases.append((expected, note_files))
     return cases

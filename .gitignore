@@ -24,3 +24,6 @@ knowledge/*.md
 
 # Golden-Set-Kandidaten aus taeglicher Nutzung (koennen echte Kundendaten enthalten)
 tests/golden_set_candidates/
+# Golden-Referenzen + Notes aus ECHTEN Deals (Kundenzitate — nie ins public Repo)
+tests/golden_set/private/
+tests/sample_notes/private/

@@ -81,16 +81,47 @@ ist WAHRSCHEINLICH.
 - Metrics-Leiter: eine einzelne, unvalidierte Selbstauskunft (z.B. "ich verbringe \
 50% meiner Woche damit") ist ZU_PRUEFEN. Eine vom Treiber benannte, konsistente \
 Zielmetrik ohne Monetarisierung ist WAHRSCHEINLICH. GESICHERT erst, wenn der Kunde \
-die Zahl bestaetigt/selbst gerechnet hat (their math beats your math).
+die Zahl bestaetigt/selbst gerechnet hat (their math beats your math). ZUSATZ \
+(16.07.): Auch eine vom EB benannte Ziel-Schwelle (z.B. "Payback < 24 Monate") \
+hebt Metrics NICHT auf WAHRSCHEINLICH, solange die Rohzahlen dahinter \
+Einzelquelle sind — erst recht, wenn diese Quelle das Unternehmen verlaesst. \
+Ein von UNS gerechneter Case mit Kundenzahlen ist unser Konstrukt, kein Beleg.
+- Pain-Leiter (16.07.): einseitig artikulierter Pain ohne Konsequenz/Vorfall \
+(nur eine Abteilung, keine Zahl, kein Druck von oben) ist ZU_PRUEFEN. Mehrfach \
+und woertlich belegt PLUS realer Vorfall mit erlebter Konsequenz (z.B. \
+Beinahe-Strafe, beim EB gelandet) ist WAHRSCHEINLICH. GESICHERT erst bei \
+Quantifizierung oder Multi-Stakeholder-Bestaetigung mit klaren Auswirkungen — \
+zweifach-muendlich bleibt muendlich.
+- Teil-Artefakt-Regel (16.07.): ein erledigtes Teilstueck mit Artefakt (z.B. \
+schriftlich bestandener Security-Review) wertet eine Dimension NICHT auf, wenn \
+der groessere Rest des Weges unbekannt ist (Beschaffung, moegliche Ausschreibung, \
+Legal). Das unbekannte formale Restrisiko dominiert das erledigte Teilstueck: \
+die Freigabe ist die Eintrittskarte, nicht der halbe Weg. Paper Process bleibt \
+dann ZU_PRUEFEN.
+- Champion-Regel in BEIDE Richtungen (16.07.): fuer WAHRSCHEINLICH braucht es \
+NACHGEWIESENEN Einfluss mit Ergebnis (EB-Termin geliefert, Dokument intern \
+platziert, Review angestossen) — Wille, Begeisterung und organisierte Termine \
+im eigenen Team reichen nicht (ZU_PRUEFEN). Umgekehrt degradiert ein bekanntes \
+Ablaufdatum (Kuendigung, Wechsel) einen HEUTE noch aktiv liefernden Champion \
+NICHT unter WAHRSCHEINLICH — das Risiko gehoert in deal_risks und den Score, \
+nicht ins Confidence-Tier. Erst wenn der Champion faktisch weg/abgetaucht ist, \
+gilt ZU_PRUEFEN.
 - UNBEKANNT vs. ZU_PRUEFEN: ein Signal zaehlt nur fuer die Dimension, die es \
 wirklich informiert. Vage Interessens-Aeusserungen einzelner Personen (z.B. \
 "will Security sehen") machen aus einer nicht artikulierten Dimension (z.B. \
-Decision Criteria) KEIN ZU_PRUEFEN — sie bleibt UNBEKANNT, bis echte Substanz da ist.
+Decision Criteria) KEIN ZU_PRUEFEN — sie bleibt UNBEKANNT, bis echte Substanz da ist. \
+ZUSATZ (16.07.): Auch beilaeufige oder scherzhafte Saetze ("muss sich gut \
+anfuehlen und bezahlbar sein", "schauen wir uns nix anderes an, wozu") und \
+Allgemeinplaetze ("am Ende entscheidet die GF") sind KEINE Beleglage — die \
+Dimension bleibt UNBEKANNT. Nichts erhoben bleibt nichts.
 - Competition-Leiter: NUR Status-quo/Bordmittel als Hypothese ohne jeden Beleg -> \
 ZU_PRUEFEN. Belegte konkurrierende Angebote/Vergleichsprozesse (z.B. Einkauf \
 vergleicht real, Preisabstand genannt) sind WAHRSCHEINLICH, auch wenn die Anbieter \
 nicht namentlich bekannt sind. Namentlich bekannter, aktiver Wettbewerber mit \
-Belegen -> GESICHERT.
+Belegen -> GESICHERT. ZUSATZ (16.07.): ein NAME allein ist keine Substanz — \
+ein benannter Wettbewerber, ueber den nichts Belastbares bekannt ist (Staerke, \
+Preis, Stand) und dessen Einschaetzung ("eher Pflichtuebung") allein von \
+unserem eigenen Fuersprecher stammt, bleibt ZU_PRUEFEN, nicht WAHRSCHEINLICH.
 
 ## Trend & Widersprueche zum Vorgaenger (bindende Ingestion-Entscheidung 2)
 Wenn ein voriger Snapshot mitgegeben ist: bestimme trend je Dimension durch Vergleich \
