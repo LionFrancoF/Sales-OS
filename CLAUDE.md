@@ -481,3 +481,23 @@ Knowledge-Critic (Agent, der Lions Playbooks auf Widersprüche/Lücken gegenlies
   Kandidaten aus ECHTEN Deals (Kundenzitate dürfen nicht ins public Repo,
   eval sucht Notes nur in sample_notes/) → gitignorter Privat-Bereich als
   Kandidat. 112 pytest grün.
+- **2026-07-17 — P-GS6b (Kalibrier-Regeln + Privat-Ablage):** Lions 5 Sparring-
+  Regeln in den Kalibrier-Block (prompt_version ac1a4beeabbf) + Momentum-
+  Klarstellung „Ausbleiben ≠ Gegenbeleg" ins Playbook (gepusht). Privat-Ablage
+  gebaut (Entscheidung Lion: Kundenzitate nie ins public Repo):
+  tests/{golden_set,sample_notes}/private/ gitignored, find_golden_cases scannt
+  private/ mit, neuer CLI-Befehl export-notes <deal> (Roh-Notes aus DB →
+  Privat-Ablage, chronologisch; Tests bewusst mit tmp-Zielordner). README
+  ergänzt. Verifikationslauf: **Momentum 6/6** (Klarstellung wirkt),
+  Scores 4× exakt + Δ−2/−1, Confidence 33→39/48 (Voltara 3→8/8, Papyrus 7/8).
+  Verbleibende 9 Misses in 3 Gruppen: (a) 2× Pain-Leiter-Überschärfung — meine
+  Kodierung verlangt „realen Vorfall" für WAHRSCHEINLICH, Lions Alt-Referenzen
+  (Nordwind/Meridian Pain) geben W auch bei wiederholter, teilquantifizierter
+  Artikulation ohne Vorfall → Wording-Fix-Kandidat („ODER"-Klausel);
+  (b) 3× UNBEKANNT-Boden — Competition-Leiter Stufe 1 (Status-quo-Hypothese
+  = ZP) wird als Boden gelesen, Vor-Stufe „nichts erhoben → UNBEKANNT" fehlt
+  in der Leiter selbst → Wording-Fix-Kandidat; (c) 4× echte Grenzfall-Flips
+  (Meridian EB G/W + Process, Nordwind Paper, Hanseatik EB) → Rauschen, nicht
+  anfassen. Disziplin-Stopp nach diesem Zyklus (Befund 2.3); ob die zwei
+  Wording-Fixes einen letzten Mini-Zyklus bekommen, entscheidet Lion.
+  116 pytest grün. Haupt-Repo-Push zu GitHub steht aus (wartet auf Lions Go).
